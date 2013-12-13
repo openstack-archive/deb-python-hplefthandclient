@@ -1,0 +1,594 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>hplefthandclient.client &mdash; HP LeftHand REST Client 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="HP LeftHand REST Client 1.0.0 documentation" href="../../index.html" />
+    <link rel="up" title="hplefthandclient" href="../hplefthandclient.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">HP LeftHand REST Client 1.0.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../hplefthandclient.html" accesskey="U">hplefthandclient</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for hplefthandclient.client</h1><div class="highlight"><pre>
+<span class="c"># vim: tabstop=4 shiftwidth=4 softtabstop=4</span>
+<span class="c">#</span>
+<span class="c"># Copyright 2012 Hewlett Packard Development Company, L.P.</span>
+<span class="c"># All Rights Reserved.</span>
+<span class="c">#</span>
+<span class="c">#    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may</span>
+<span class="c">#    not use this file except in compliance with the License. You may obtain</span>
+<span class="c">#    a copy of the License at</span>
+<span class="c">#</span>
+<span class="c">#         http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c">#</span>
+<span class="c">#    Unless required by applicable law or agreed to in writing, software</span>
+<span class="c">#    distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT</span>
+<span class="c">#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the</span>
+<span class="c">#    License for the specific language governing permissions and limitations</span>
+<span class="c">#    under the License.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">HPLeftHand REST Client</span>
+
+<span class="sd">.. module: HPLeftHandClient</span>
+<span class="sd">.. moduleauthor: Kurt Martin</span>
+<span class="sd">.. moduleauthor: Walter A. Boring IV</span>
+
+<span class="sd">:Author: Kurt Martin</span>
+<span class="sd">:Description: This is the LeftHand/StoreVirtual Client that talks to the</span>
+<span class="sd">LeftHand OS REST Service.</span>
+
+<span class="sd">This client requires and works with version 11.5 of the LeftHand firmware</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">hplefthandclient</span> <span class="kn">import</span> <span class="n">http</span>
+
+
+<div class="viewcode-block" id="HPLeftHandClient"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient">[docs]</a><span class="k">class</span> <span class="nc">HPLeftHandClient</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_url</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">api_url</span> <span class="o">=</span> <span class="n">api_url</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">http</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">HTTPJSONRESTClient</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api_url</span><span class="p">)</span>
+
+<div class="viewcode-block" id="HPLeftHandClient.debug_rest"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.debug_rest">[docs]</a>    <span class="k">def</span> <span class="nf">debug_rest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flag</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This is useful for debugging requests to 3PAR</span>
+
+<span class="sd">        :param flag: set to True to enable debugging</span>
+<span class="sd">        :type flag: bool</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">set_debug_flag</span><span class="p">(</span><span class="n">flag</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="HPLeftHandClient.login"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.login">[docs]</a>    <span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This authenticates against the LH OS REST server and creates a session.</span>
+
+<span class="sd">        :param username: The username</span>
+<span class="sd">        :type username: str</span>
+<span class="sd">        :param password: The password</span>
+<span class="sd">        :type password: str</span>
+
+<span class="sd">        :returns: None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="HPLeftHandClient.logout"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.logout">[docs]</a>    <span class="k">def</span> <span class="nf">logout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This destroys the session and logs out from the LH OS server</span>
+
+<span class="sd">        :returns: None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">unauthenticate</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="HPLeftHandClient.getClusters"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.getClusters">[docs]</a>    <span class="k">def</span> <span class="nf">getClusters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the list of Clusters</span>
+
+<span class="sd">        :returns: list of Clusters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;/clusters&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">body</span>
+</div>
+<div class="viewcode-block" id="HPLeftHandClient.getCluster"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.getCluster">[docs]</a>    <span class="k">def</span> <span class="nf">getCluster</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cluster_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get information about a Cluster</span>
+
+<span class="sd">        :param cluster_id: The id of the cluster to find</span>
+<span class="sd">        :type cluster_id: str</span>
+
+<span class="sd">        :returns: cluster</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;/clusters/</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">cluster_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">body</span>
+</div>
+<div class="viewcode-block" id="HPLeftHandClient.getClusterByName"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.getClusterByName">[docs]</a>    <span class="k">def</span> <span class="nf">getClusterByName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get information about a cluster by name</span>
+
+<span class="sd">        :param name: The name of the cluster to find</span>
+<span class="sd">        :type name: str</span>
+
+<span class="sd">        :returns: cluster</span>
+<span class="sd">        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound` -</span>
+<span class="sd">        NON_EXISTENT_CLUSTER - cluster doesn&#39;t exist</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;/clusters?name=</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">body</span>
+</div>
+<div class="viewcode-block" id="HPLeftHandClient.getServers"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.getServers">[docs]</a>    <span class="k">def</span> <span class="nf">getServers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the list of Servers</span>
+
+<span class="sd">        :returns: list of Servers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;/servers&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">body</span>
+</div>
+<div class="viewcode-block" id="HPLeftHandClient.getServer"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.getServer">[docs]</a>    <span class="k">def</span> <span class="nf">getServer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get information about a server</span>
+
+<span class="sd">        :param server_id: The id of the server to find</span>
+<span class="sd">        :type server_id: str</span>
+
+<span class="sd">        :returns: server</span>
+<span class="sd">        :raises: :class:`~hplefthandclient.exceptions.HTTPServerError`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;/servers/</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">server_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">body</span>
+</div>
+<div class="viewcode-block" id="HPLeftHandClient.getServerByName"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.getServerByName">[docs]</a>    <span class="k">def</span> <span class="nf">getServerByName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get information about a server by name</span>
+
+<span class="sd">        :param name: The name of the server to find</span>
+<span class="sd">        :type name: str</span>
+
+<span class="sd">        :returns: server</span>
+<span class="sd">        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound` -</span>
+<span class="sd">        NON_EXISTENT_SERVER - server doesn&#39;t exist</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;/servers?name=</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">body</span>
+</div>
+<div class="viewcode-block" id="HPLeftHandClient.createServer"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.createServer">[docs]</a>    <span class="k">def</span> <span class="nf">createServer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">iqn</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a server by name</span>
+
+<span class="sd">        :param name: The name of the server to create</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        :param iqn: The iSCSI qualified name</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        :param optional: Dictionary of optional params</span>
+<span class="sd">        :type optional: dict</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            optional = {</span>
+<span class="sd">                &#39;description&#39; : &quot;some comment&quot;,</span>
+<span class="sd">                &#39;iscsiEnabled&#39; : True,</span>
+<span class="sd">                &#39;chapName&#39;: &quot;some chap name&quot;,</span>
+<span class="sd">                &#39;chapAuthenticationRequired&#39;: False,</span>
+<span class="sd">                &#39;chapInitiatorSecret&#39;: &quot;initiator secret&quot;,</span>
+<span class="sd">                &#39;chapTargetSecret&#39;: &quot;target secret&quot;,</span>
+<span class="sd">                &#39;iscsiLoadBalancingEnabled&#39;: True,</span>
+<span class="sd">                &#39;controllingServerName&#39;: &quot;server name&quot;,</span>
+<span class="sd">                &#39;fibreChannelEnabled&#39;: False,</span>
+<span class="sd">                &#39;inServerCluster&quot;: True</span>
+<span class="sd">            }</span>
+
+<span class="sd">        :returns: server</span>
+<span class="sd">        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound` -</span>
+<span class="sd">        NON_EXISTENT_SERVER - server doesn&#39;t exist</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s">&#39;iscsiIQN&#39;</span><span class="p">:</span> <span class="n">iqn</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">optional</span><span class="p">:</span>
+            <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mergeDict</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">optional</span><span class="p">)</span>
+
+        <span class="n">response</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">&#39;/servers&#39;</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="n">info</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">body</span>
+</div>
+<div class="viewcode-block" id="HPLeftHandClient.deleteServer"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.deleteServer">[docs]</a>    <span class="k">def</span> <span class="nf">deleteServer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delete a Server</span>
+
+<span class="sd">        :param server_id: the server ID to delete</span>
+
+<span class="sd">        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound` -</span>
+<span class="sd">        NON_EXISTENT_SERVER - The server does not exist</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s">&#39;/servers/</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">server_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">body</span>
+</div>
+<div class="viewcode-block" id="HPLeftHandClient.getSnapshots"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.getSnapshots">[docs]</a>    <span class="k">def</span> <span class="nf">getSnapshots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the list of Snapshots</span>
+
+<span class="sd">        :returns: list of Snapshots</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;/snapshots&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">body</span>
+</div>
+<div class="viewcode-block" id="HPLeftHandClient.getSnapshot"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.getSnapshot">[docs]</a>    <span class="k">def</span> <span class="nf">getSnapshot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">snapshot_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get information about a Snapshot</span>
+
+<span class="sd">        :returns: snapshot</span>
+<span class="sd">        :raises: :class:`~hplefthandclient.exceptions.HTTPServerError`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;/snapshots/</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">snapshot_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">body</span>
+</div>
+<div class="viewcode-block" id="HPLeftHandClient.getSnapshotByName"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.getSnapshotByName">[docs]</a>    <span class="k">def</span> <span class="nf">getSnapshotByName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get information about a snapshot by name</span>
+
+<span class="sd">        :param name: The name of the snapshot to find</span>
+
+<span class="sd">        :returns: volume</span>
+<span class="sd">        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound` -</span>
+<span class="sd">        NON_EXISTENT_SNAP - shapshot doesn&#39;t exist</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;/snapshots?name=</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">body</span>
+</div>
+<div class="viewcode-block" id="HPLeftHandClient.createSnapshot"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.createSnapshot">[docs]</a>    <span class="k">def</span> <span class="nf">createSnapshot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">source_volume_id</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a snapshot of an existing Volume</span>
+
+<span class="sd">        :param name: Name of the Snapshot</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        :param source_volume_id: The volume you want to snapshot</span>
+<span class="sd">        :type source_volume_id: int</span>
+<span class="sd">        :param optional: Dictionary of optional params</span>
+<span class="sd">        :type optional: dict</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            optional = {</span>
+<span class="sd">                &#39;description&#39; : &quot;some comment&quot;,</span>
+<span class="sd">                &#39;inheritAccess&#39; : false</span>
+<span class="sd">            }</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">optional</span><span class="p">:</span>
+            <span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mergeDict</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">optional</span><span class="p">)</span>
+
+        <span class="n">info</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;action&#39;</span><span class="p">:</span> <span class="s">&#39;createSnapshot&#39;</span><span class="p">,</span>
+                <span class="s">&#39;parameters&#39;</span><span class="p">:</span> <span class="n">parameters</span><span class="p">}</span>
+
+        <span class="n">response</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">&#39;/volumes/</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">source_volume_id</span><span class="p">,</span>
+                                        <span class="n">body</span><span class="o">=</span><span class="n">info</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">body</span>
+</div>
+<div class="viewcode-block" id="HPLeftHandClient.deleteSnapshot"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.deleteSnapshot">[docs]</a>    <span class="k">def</span> <span class="nf">deleteSnapshot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">snapshot_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delete a Snapshot</span>
+
+<span class="sd">        :param snapshot_id: the snapshot ID to delete</span>
+
+<span class="sd">        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound` -</span>
+<span class="sd">        NON_EXISTENT_SNAPSHOT - The snapshot does not exist</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s">&#39;/snapshots/</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">snapshot_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">body</span>
+</div>
+<div class="viewcode-block" id="HPLeftHandClient.cloneSnapshot"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.cloneSnapshot">[docs]</a>    <span class="k">def</span> <span class="nf">cloneSnapshot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">source_snapshot_id</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a clone of an existing Shapshot</span>
+
+<span class="sd">        :param name: Name of the Snapshot clone</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        :param source_snapshot_id: The snapshot you want to clone</span>
+<span class="sd">        :type source_snapshot_id: int</span>
+<span class="sd">        :param optional: Dictionary of optional params</span>
+<span class="sd">        :type optional: dict</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            optional = {</span>
+<span class="sd">                &#39;description&#39; : &quot;some comment&quot;</span>
+<span class="sd">            }</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">optional</span><span class="p">:</span>
+            <span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mergeDict</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">optional</span><span class="p">)</span>
+
+        <span class="n">info</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;action&#39;</span><span class="p">:</span> <span class="s">&#39;createSmartClone&#39;</span><span class="p">,</span>
+                <span class="s">&#39;parameters&#39;</span><span class="p">:</span> <span class="n">parameters</span><span class="p">}</span>
+
+        <span class="n">response</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">&#39;/snapshots/</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">source_snapshot_id</span><span class="p">,</span>
+                                        <span class="n">body</span><span class="o">=</span><span class="n">info</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">body</span>
+</div>
+<div class="viewcode-block" id="HPLeftHandClient.getVolumes"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.getVolumes">[docs]</a>    <span class="k">def</span> <span class="nf">getVolumes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the list of Volumes</span>
+
+<span class="sd">        :returns: list of Volumes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;/volumes&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">body</span>
+</div>
+<div class="viewcode-block" id="HPLeftHandClient.getVolume"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.getVolume">[docs]</a>    <span class="k">def</span> <span class="nf">getVolume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">volume_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get information about a volume</span>
+
+<span class="sd">        :param volume_id: The id of the volume to find</span>
+<span class="sd">        :type volume_id: str</span>
+
+<span class="sd">        :returns: volume</span>
+<span class="sd">        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound` -</span>
+<span class="sd">        NON_EXISTENT_VOL - volume doesn&#39;t exist</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;/volumes/</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">volume_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">body</span>
+</div>
+<div class="viewcode-block" id="HPLeftHandClient.getVolumeByName"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.getVolumeByName">[docs]</a>    <span class="k">def</span> <span class="nf">getVolumeByName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get information about a volume by name</span>
+
+<span class="sd">        :param name: The name of the volume to find</span>
+<span class="sd">        :type volume_id: str</span>
+
+<span class="sd">        :returns: volume</span>
+<span class="sd">        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound` -</span>
+<span class="sd">        NON_EXISTENT_VOL - volume doesn&#39;t exist</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;/volumes?name=</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">body</span>
+</div>
+<div class="viewcode-block" id="HPLeftHandClient.createVolume"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.createVolume">[docs]</a>    <span class="k">def</span> <span class="nf">createVolume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">cluster_id</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Create a new volume</span>
+
+<span class="sd">        :param name: the name of the volume</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        :param cluster_id: the cluster Id</span>
+<span class="sd">        :type cluster_id: int</span>
+<span class="sd">        :param sizeKB: size in KB for the volume</span>
+<span class="sd">        :type sizeKB: int</span>
+<span class="sd">        :param optional: dict of other optional items</span>
+<span class="sd">        :type optional: dict</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            optional = {</span>
+<span class="sd">             &#39;description&#39;: &#39;some comment&#39;,</span>
+<span class="sd">             &#39;isThinProvisioned&#39;: &#39;true&#39;,</span>
+<span class="sd">             &#39;autogrowSeconds&#39;: 200,</span>
+<span class="sd">             &#39;clusterName&#39;: &#39;somename&#39;,</span>
+<span class="sd">             &#39;isAdaptiveOptimizationEnabled&#39;: &#39;true&#39;,</span>
+<span class="sd">             &#39;dataProtectionLevel&#39;: 2,</span>
+<span class="sd">            }</span>
+
+<span class="sd">        :returns: List of Volumes</span>
+
+<span class="sd">        :raises: :class:`~hplefthandclient.exceptions.HTTPConflict` -</span>
+<span class="sd">        EXISTENT_SV - Volume Exists already</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s">&#39;clusterID&#39;</span><span class="p">:</span> <span class="n">cluster_id</span><span class="p">,</span> <span class="s">&#39;size&#39;</span><span class="p">:</span> <span class="n">size</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">optional</span><span class="p">:</span>
+            <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mergeDict</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">optional</span><span class="p">)</span>
+
+        <span class="n">response</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">&#39;/volumes&#39;</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="n">info</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">body</span>
+</div>
+<div class="viewcode-block" id="HPLeftHandClient.deleteVolume"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.deleteVolume">[docs]</a>    <span class="k">def</span> <span class="nf">deleteVolume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">volume_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delete a volume</span>
+
+<span class="sd">        :param name: the name of the volume</span>
+<span class="sd">        :type name: str</span>
+
+<span class="sd">        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound` -</span>
+<span class="sd">        NON_EXISTENT_VOL - The volume does not exist</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s">&#39;/volumes/</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">volume_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">body</span>
+</div>
+<div class="viewcode-block" id="HPLeftHandClient.modifyVolume"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.modifyVolume">[docs]</a>    <span class="k">def</span> <span class="nf">modifyVolume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">volume_id</span><span class="p">,</span> <span class="n">optional</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Modify an existing volume.</span>
+
+<span class="sd">        :param volume_id: The id of the volume to find</span>
+<span class="sd">        :type volume_id: str</span>
+
+<span class="sd">        :returns: volume</span>
+<span class="sd">        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound` -</span>
+<span class="sd">        NON_EXISTENT_VOL - volume doesn&#39;t exist</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;volume_id&#39;</span><span class="p">:</span> <span class="n">volume_id</span><span class="p">}</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mergeDict</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">optional</span><span class="p">)</span>
+        <span class="n">response</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">&#39;/volumes/</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">volume_id</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="n">info</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">body</span>
+</div>
+<div class="viewcode-block" id="HPLeftHandClient.cloneVolume"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.cloneVolume">[docs]</a>    <span class="k">def</span> <span class="nf">cloneVolume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">source_volume_id</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a clone of an existing Volume</span>
+
+<span class="sd">        :param name: Name of the Volume clone</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        :param source_volume_id: The Volume you want to clone</span>
+<span class="sd">        :type source_volume_id: int</span>
+<span class="sd">        :param optional: Dictionary of optional params</span>
+<span class="sd">        :type optional: dict</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            optional = {</span>
+<span class="sd">                &#39;description&#39; : &quot;some comment&quot;</span>
+<span class="sd">            }</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">optional</span><span class="p">:</span>
+            <span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mergeDict</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">optional</span><span class="p">)</span>
+
+        <span class="n">info</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;action&#39;</span><span class="p">:</span> <span class="s">&#39;createSmartClone&#39;</span><span class="p">,</span>
+                <span class="s">&#39;parameters&#39;</span><span class="p">:</span> <span class="n">parameters</span><span class="p">}</span>
+
+        <span class="n">response</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">&#39;/volumes/</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">source_volume_id</span><span class="p">,</span>
+                                        <span class="n">body</span><span class="o">=</span><span class="n">info</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">body</span>
+</div>
+<div class="viewcode-block" id="HPLeftHandClient.addServerAccess"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.addServerAccess">[docs]</a>    <span class="k">def</span> <span class="nf">addServerAccess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">volume_id</span><span class="p">,</span> <span class="n">server_id</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Assign a Volume to a Server</span>
+
+<span class="sd">        :param volume_id: Volume ID of the volume</span>
+<span class="sd">        :type name: int</span>
+<span class="sd">        :param server_id: Server ID of the server to add the volume to</span>
+<span class="sd">        :type source_volume_id: int</span>
+<span class="sd">        :param optional: Dictionary of optional params</span>
+<span class="sd">        :type optional: dict</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            optional = {</span>
+<span class="sd">                &#39;Transport&#39; : 0,</span>
+<span class="sd">                &#39;Lun&#39; : 1,</span>
+<span class="sd">            }</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;serverID&#39;</span><span class="p">:</span> <span class="n">server_id</span><span class="p">,</span>
+                      <span class="s">&#39;exclusiveAccess&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+                      <span class="s">&#39;readAccess&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+                      <span class="s">&#39;writeAccess&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">optional</span><span class="p">:</span>
+            <span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mergeDict</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">optional</span><span class="p">)</span>
+
+        <span class="n">info</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;action&#39;</span><span class="p">:</span> <span class="s">&#39;addServerAccess&#39;</span><span class="p">,</span>
+                <span class="s">&#39;parameters&#39;</span><span class="p">:</span> <span class="n">parameters</span><span class="p">}</span>
+
+        <span class="n">response</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">&#39;/volumes/</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">volume_id</span><span class="p">,</span>
+                                        <span class="n">body</span><span class="o">=</span><span class="n">info</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">body</span>
+</div>
+<div class="viewcode-block" id="HPLeftHandClient.removeServerAccess"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.removeServerAccess">[docs]</a>    <span class="k">def</span> <span class="nf">removeServerAccess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">volume_id</span><span class="p">,</span> <span class="n">server_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Unassign a Volume from a Server</span>
+
+<span class="sd">        :param volume_id: Volume ID of the volume</span>
+<span class="sd">        :type name: int</span>
+<span class="sd">        :param server_id: Server ID of the server to remove the volume fom</span>
+<span class="sd">        :type source_volume_id: int</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;serverID&#39;</span><span class="p">:</span> <span class="n">server_id</span><span class="p">}</span>
+
+        <span class="n">info</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;action&#39;</span><span class="p">:</span> <span class="s">&#39;removeServerAccess&#39;</span><span class="p">,</span>
+                <span class="s">&#39;parameters&#39;</span><span class="p">:</span> <span class="n">parameters</span><span class="p">}</span>
+
+        <span class="n">response</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">&#39;/volumes/</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">volume_id</span><span class="p">,</span>
+                                        <span class="n">body</span><span class="o">=</span><span class="n">info</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">body</span>
+</div>
+    <span class="k">def</span> <span class="nf">_mergeDict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dict1</span><span class="p">,</span> <span class="n">dict2</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Safely merge 2 dictionaries together</span>
+
+<span class="sd">        :param dict1: The first dictionary</span>
+<span class="sd">        :type dict1: dict</span>
+<span class="sd">        :param dict2: The second dictionary</span>
+<span class="sd">        :type dict2: dict</span>
+
+<span class="sd">        :returns: dict</span>
+
+<span class="sd">        :raises Exception: dict1, dict2 is not a dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">dict1</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">dict</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;dict1 is not a dictionary&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">dict2</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">dict</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;dict2 is not a dictionary&quot;</span><span class="p">)</span>
+
+        <span class="n">dict3</span> <span class="o">=</span> <span class="n">dict1</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">dict3</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">dict2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dict3</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">HP LeftHand REST Client 1.0.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../hplefthandclient.html" >hplefthandclient</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013 Hewlett Packard Development Company, L.P..
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

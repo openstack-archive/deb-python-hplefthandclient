@@ -1,0 +1,187 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tutorial &mdash; HP LeftHand REST Client 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="HP LeftHand REST Client 1.0.0 documentation" href="index.html" />
+    <link rel="next" title="Changelog" href="changelog.html" />
+    <link rel="prev" title="Installing / Upgrading" href="installation.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="changelog.html" title="Changelog"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installing / Upgrading"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">HP LeftHand REST Client 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="tutorial">
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
+<p>This tutorial is intended as an introduction to working with
+<strong>HPLeftHandClient</strong>.</p>
+<div class="section" id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<p>Before we start, make sure that you have the <strong>HPLeftHandClient</strong> distribution
+<a class="reference internal" href="installation.html"><em>installed</em></a>. In the Python shell, the following
+should run without raising an exception:</p>
+<div class="highlight-bash"><div class="highlight"><pre>&gt;&gt;&gt; import hplefthandclient
+</pre></div>
+</div>
+<p>This tutorial also assumes that a LeftHand array is up and running and the
+LeftHand OS is running.</p>
+</div>
+<div class="section" id="create-the-client-and-login">
+<h2>Create the Client and login<a class="headerlink" href="#create-the-client-and-login" title="Permalink to this headline">¶</a></h2>
+<p>The first step when working with <strong>HPLeftHandClient</strong> is to create a
+<a class="reference internal" href="hplefthandclient.html#hplefthandclient.client.HPLeftHandClient" title="hplefthandclient.client.HPLeftHandClient"><tt class="xref py py-class docutils literal"><span class="pre">HPLeftHandClient</span></tt></a> to the LeftHand drive array
+and logging in to create the session.   You must <a class="reference internal" href="hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.login" title="hplefthandclient.client.HPLeftHandClient.login"><tt class="xref py py-meth docutils literal"><span class="pre">login()</span></tt></a> prior to calling the other APIs to do work on the LeftHand.
+Doing so is easy:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">hplefthandclient</span> <span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">exceptions</span>
+<span class="c">#this creates the client object and sets the url to the</span>
+<span class="c">#LeftHand server with IP 10.10.10.10 on port 8008.</span>
+<span class="n">cl</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">HPLeftHandClient</span><span class="p">(</span><span class="s">&quot;https://10.10.10.10:8008/api/v1&quot;</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">cl</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot;Login worked!&quot;</span>
+<span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">HTTPUnauthorized</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;Login failed.&quot;</span>
+</pre></div>
+</div>
+<p>When you are done with the the client, it&#8217;s a good idea to logout from
+the LeftHand so there isn&#8217;t a stale session sitting around.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">cl</span><span class="o">.</span><span class="n">logout</span><span class="p">()</span>
+<span class="k">print</span> <span class="s">&quot;logout worked&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="getting-a-list-of-volumes">
+<h2>Getting a list of Volumes<a class="headerlink" href="#getting-a-list-of-volumes" title="Permalink to this headline">¶</a></h2>
+<p>After you have logged in, you can start making calls to the LeftHand APIs.
+A simple example is getting a list of existing volumes on the array with
+a call to <a class="reference internal" href="hplefthandclient.html#hplefthandclient.client.HPLeftHandClient.getVolumes" title="hplefthandclient.client.HPLeftHandClient.getVolumes"><tt class="xref py py-meth docutils literal"><span class="pre">getVolumes()</span></tt></a>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pprint</span>
+<span class="k">try</span><span class="p">:</span>
+   <span class="n">volumes</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">getVolumes</span><span class="p">()</span>
+   <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">volumes</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">HTTPUnauthorized</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+   <span class="k">print</span> <span class="s">&quot;You must login first&quot;</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+   <span class="c">#something unexpected happened</span>
+   <span class="k">print</span> <span class="n">ex</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">volumes is an array of volumes in the above call</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tutorial</a><ul>
+<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#create-the-client-and-login">Create the Client and login</a></li>
+<li><a class="reference internal" href="#getting-a-list-of-volumes">Getting a list of Volumes</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="installation.html"
+                        title="previous chapter">Installing / Upgrading</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="changelog.html"
+                        title="next chapter">Changelog</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/tutorial.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="changelog.html" title="Changelog"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installing / Upgrading"
+             >previous</a> |</li>
+        <li><a href="index.html">HP LeftHand REST Client 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013 Hewlett Packard Development Company, L.P..
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

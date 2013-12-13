@@ -1,0 +1,404 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>hplefthandclient.exceptions &mdash; HP LeftHand REST Client 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="HP LeftHand REST Client 1.0.0 documentation" href="../../index.html" />
+    <link rel="up" title="hplefthandclient" href="../hplefthandclient.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">HP LeftHand REST Client 1.0.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../hplefthandclient.html" accesskey="U">hplefthandclient</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for hplefthandclient.exceptions</h1><div class="highlight"><pre>
+<span class="c"># vim: tabstop=4 shiftwidth=4 softtabstop=4</span>
+<span class="c">#</span>
+<span class="c"># Copyright 2012 Hewlett Packard Development Company, L.P.</span>
+<span class="c"># All Rights Reserved.</span>
+<span class="c">#</span>
+<span class="c">#    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may</span>
+<span class="c">#    not use this file except in compliance with the License. You may obtain</span>
+<span class="c">#    a copy of the License at</span>
+<span class="c">#</span>
+<span class="c">#         http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c">#</span>
+<span class="c">#    Unless required by applicable law or agreed to in writing, software</span>
+<span class="c">#    distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT</span>
+<span class="c">#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the</span>
+<span class="c">#    License for the specific language governing permissions and limitations</span>
+<span class="c">#    under the License.</span>
+<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">Exceptions for the client</span>
+
+<span class="sd">.. module: Exceptions</span>
+
+<span class="sd">:Author: Walter A. Boring IV</span>
+<span class="sd">:Description: This contains the HTTP exceptions that can come back from the REST calls</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="UnsupportedVersion"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.UnsupportedVersion">[docs]</a><span class="k">class</span> <span class="nc">UnsupportedVersion</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Indicates that the user is trying to use an unsupported version of the API</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+</div>
+<div class="viewcode-block" id="CommandError"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.CommandError">[docs]</a><span class="k">class</span> <span class="nc">CommandError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span>
+</div>
+<div class="viewcode-block" id="AuthorizationFailure"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.AuthorizationFailure">[docs]</a><span class="k">class</span> <span class="nc">AuthorizationFailure</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span>
+</div>
+<div class="viewcode-block" id="NoUniqueMatch"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.NoUniqueMatch">[docs]</a><span class="k">class</span> <span class="nc">NoUniqueMatch</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span>
+</div>
+<div class="viewcode-block" id="ClientException"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.ClientException">[docs]</a><span class="k">class</span> <span class="nc">ClientException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The base exception class for all exceptions this library raises.</span>
+
+<span class="sd">    :param error: The error array </span>
+<span class="sd">    :type error: array</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_error_code</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">_error_desc</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="n">_debug1</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">_debug2</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s">&#39;messageID&#39;</span> <span class="ow">in</span> <span class="n">error</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_error_code</span> <span class="o">=</span> <span class="n">error</span><span class="p">[</span><span class="s">&#39;messageID&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s">&#39;message&#39;</span> <span class="ow">in</span> <span class="n">error</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_error_desc</span> <span class="o">=</span> <span class="n">error</span><span class="p">[</span><span class="s">&#39;message&#39;</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="s">&#39;debug1&#39;</span> <span class="ow">in</span> <span class="n">error</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_debug1</span> <span class="o">=</span> <span class="n">error</span><span class="p">[</span><span class="s">&#39;debug1&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s">&#39;debug2&#39;</span> <span class="ow">in</span> <span class="n">error</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_debug2</span> <span class="o">=</span> <span class="n">error</span><span class="p">[</span><span class="s">&#39;debug2&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="ClientException.get_code"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.ClientException.get_code">[docs]</a>    <span class="k">def</span> <span class="nf">get_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_error_code</span>
+</div>
+<div class="viewcode-block" id="ClientException.get_description"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.ClientException.get_description">[docs]</a>    <span class="k">def</span> <span class="nf">get_description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_error_desc</span>
+
+</div>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">formatted_string</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> (HTTP </span><span class="si">%s</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_status</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_error_code</span><span class="p">:</span>
+            <span class="n">formatted_string</span> <span class="o">+=</span> <span class="s">&quot; </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_error_code</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_error_desc</span><span class="p">:</span>
+            <span class="n">formatted_string</span> <span class="o">+=</span> <span class="s">&quot; - </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_error_desc</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_debug1</span><span class="p">:</span>
+            <span class="n">formatted_string</span> <span class="o">+=</span> <span class="s">&quot; (1: &#39;</span><span class="si">%s</span><span class="s">&#39;)&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_debug1</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_debug2</span><span class="p">:</span>
+            <span class="n">formatted_string</span> <span class="o">+=</span> <span class="s">&quot; (2: &#39;</span><span class="si">%s</span><span class="s">&#39;)&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_debug2</span>
+          
+        <span class="k">return</span> <span class="n">formatted_string</span>
+
+
+<span class="c">##</span>
+<span class="c">## 400 Errors</span>
+<span class="c">##</span>
+
+</div>
+<div class="viewcode-block" id="HTTPBadRequest"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.HTTPBadRequest">[docs]</a><span class="k">class</span> <span class="nc">HTTPBadRequest</span><span class="p">(</span><span class="n">ClientException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HTTP 400 - Bad request: you sent some malformed data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">http_status</span> <span class="o">=</span> <span class="mi">400</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Bad request&quot;</span>
+
+</div>
+<div class="viewcode-block" id="HTTPUnauthorized"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.HTTPUnauthorized">[docs]</a><span class="k">class</span> <span class="nc">HTTPUnauthorized</span><span class="p">(</span><span class="n">ClientException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HTTP 401 - Unauthorized: bad credentials.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">http_status</span> <span class="o">=</span> <span class="mi">401</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Unauthorized&quot;</span>
+
+</div>
+<div class="viewcode-block" id="HTTPForbidden"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.HTTPForbidden">[docs]</a><span class="k">class</span> <span class="nc">HTTPForbidden</span><span class="p">(</span><span class="n">ClientException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HTTP 403 - Forbidden: your credentials don&#39;t give you access to this</span>
+<span class="sd">    resource.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">http_status</span> <span class="o">=</span> <span class="mi">403</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Forbidden&quot;</span>
+
+</div>
+<div class="viewcode-block" id="HTTPNotFound"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.HTTPNotFound">[docs]</a><span class="k">class</span> <span class="nc">HTTPNotFound</span><span class="p">(</span><span class="n">ClientException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HTTP 404 - Not found</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">http_status</span> <span class="o">=</span> <span class="mi">404</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Not found&quot;</span>
+</div>
+<div class="viewcode-block" id="HTTPMethodNotAllowed"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.HTTPMethodNotAllowed">[docs]</a><span class="k">class</span> <span class="nc">HTTPMethodNotAllowed</span><span class="p">(</span><span class="n">ClientException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HTTP 405 - Method not Allowed </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">http_status</span> <span class="o">=</span> <span class="mi">405</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Method Not Allowed&quot;</span>
+</div>
+<div class="viewcode-block" id="HTTPNotAcceptable"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.HTTPNotAcceptable">[docs]</a><span class="k">class</span> <span class="nc">HTTPNotAcceptable</span><span class="p">(</span><span class="n">ClientException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HTTP 406 - Method not Acceptable</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">http_status</span> <span class="o">=</span> <span class="mi">406</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Method Not Acceptable&quot;</span>
+</div>
+<div class="viewcode-block" id="HTTPProxyAuthRequired"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.HTTPProxyAuthRequired">[docs]</a><span class="k">class</span> <span class="nc">HTTPProxyAuthRequired</span><span class="p">(</span><span class="n">ClientException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HTTP 407 - The client must first authenticate itself with the proxy.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">http_status</span> <span class="o">=</span> <span class="mi">407</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Proxy Authentication Required&quot;</span>
+</div>
+<div class="viewcode-block" id="HTTPRequestTimeout"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.HTTPRequestTimeout">[docs]</a><span class="k">class</span> <span class="nc">HTTPRequestTimeout</span><span class="p">(</span><span class="n">ClientException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HTTP 408 - The server timed out waiting for the request.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">http_status</span> <span class="o">=</span> <span class="mi">408</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Request Timeout&quot;</span>
+
+</div>
+<div class="viewcode-block" id="HTTPConflict"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.HTTPConflict">[docs]</a><span class="k">class</span> <span class="nc">HTTPConflict</span><span class="p">(</span><span class="n">ClientException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HTTP 409 - Conflict: A Conflict happened on the server</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">http_status</span> <span class="o">=</span> <span class="mi">409</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Conflict&quot;</span>
+</div>
+<div class="viewcode-block" id="HTTPGone"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.HTTPGone">[docs]</a><span class="k">class</span> <span class="nc">HTTPGone</span><span class="p">(</span><span class="n">ClientException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HTTP 410 - Indicates that the resource requested is no longer available and will not be available again.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">http_status</span> <span class="o">=</span> <span class="mi">410</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Gone&quot;</span>
+</div>
+<div class="viewcode-block" id="HTTPLengthRequired"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.HTTPLengthRequired">[docs]</a><span class="k">class</span> <span class="nc">HTTPLengthRequired</span><span class="p">(</span><span class="n">ClientException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HTTP 411 - The request did not specify the length of its content, which is required by the requested resource.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">http_status</span> <span class="o">=</span> <span class="mi">411</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Length Required&quot;</span>
+</div>
+<div class="viewcode-block" id="HTTPPreconditionFailed"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.HTTPPreconditionFailed">[docs]</a><span class="k">class</span> <span class="nc">HTTPPreconditionFailed</span><span class="p">(</span><span class="n">ClientException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HTTP 412 - The server does not meet one of the preconditions that the requester put on the request.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">http_status</span> <span class="o">=</span> <span class="mi">412</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Over limit&quot;</span>
+</div>
+<div class="viewcode-block" id="HTTPRequestEntityTooLarge"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.HTTPRequestEntityTooLarge">[docs]</a><span class="k">class</span> <span class="nc">HTTPRequestEntityTooLarge</span><span class="p">(</span><span class="n">ClientException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HTTP 413 - The request is larger than the server is willing or able to process</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">http_status</span> <span class="o">=</span> <span class="mi">413</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Request Entity Too Large&quot;</span>
+</div>
+<div class="viewcode-block" id="HTTPRequestURITooLong"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.HTTPRequestURITooLong">[docs]</a><span class="k">class</span> <span class="nc">HTTPRequestURITooLong</span><span class="p">(</span><span class="n">ClientException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HTTP 414 - The URI provided was too long for the server to process.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">http_status</span> <span class="o">=</span> <span class="mi">414</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Request URI Too Large&quot;</span>
+</div>
+<div class="viewcode-block" id="HTTPUnsupportedMediaType"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.HTTPUnsupportedMediaType">[docs]</a><span class="k">class</span> <span class="nc">HTTPUnsupportedMediaType</span><span class="p">(</span><span class="n">ClientException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HTTP 415 - The request entity has a media type which the server or resource does not support.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">http_status</span> <span class="o">=</span> <span class="mi">415</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Unsupported Media Type&quot;</span>
+</div>
+<div class="viewcode-block" id="HTTPRequestedRangeNotSatisfiable"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.HTTPRequestedRangeNotSatisfiable">[docs]</a><span class="k">class</span> <span class="nc">HTTPRequestedRangeNotSatisfiable</span><span class="p">(</span><span class="n">ClientException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HTTP 416 - The client has asked for a portion of the file, but the server cannot supply that portion.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">http_status</span> <span class="o">=</span> <span class="mi">416</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Requested Range Not Satisfiable&quot;</span>
+</div>
+<div class="viewcode-block" id="HTTPExpectationFailed"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.HTTPExpectationFailed">[docs]</a><span class="k">class</span> <span class="nc">HTTPExpectationFailed</span><span class="p">(</span><span class="n">ClientException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HTTP 417 - The server cannot meet the requirements of the Expect request-header field.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">http_status</span> <span class="o">=</span> <span class="mi">417</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Expectation Failed&quot;</span>
+</div>
+<div class="viewcode-block" id="HTTPTeaPot"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.HTTPTeaPot">[docs]</a><span class="k">class</span> <span class="nc">HTTPTeaPot</span><span class="p">(</span><span class="n">ClientException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HTTP 418 - I&#39;m a Tea Pot</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">http_status</span> <span class="o">=</span> <span class="mi">418</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;I&#39;m A Teapot. (RFC 2324)&quot;</span>
+
+
+<span class="c">##</span>
+<span class="c">## 500 Errors</span>
+<span class="c">##</span>
+</div>
+<div class="viewcode-block" id="HTTPServerError"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.HTTPServerError">[docs]</a><span class="k">class</span> <span class="nc">HTTPServerError</span><span class="p">(</span><span class="n">ClientException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HTTP 500 - </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">http_status</span> <span class="o">=</span> <span class="mi">500</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Error&quot;</span>
+
+<span class="c"># NotImplemented is a python keyword.</span></div>
+<div class="viewcode-block" id="HTTPNotImplemented"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.HTTPNotImplemented">[docs]</a><span class="k">class</span> <span class="nc">HTTPNotImplemented</span><span class="p">(</span><span class="n">ClientException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HTTP 501 - Not Implemented: the server does not support this operation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">http_status</span> <span class="o">=</span> <span class="mi">501</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Not Implemented&quot;</span>
+</div>
+<div class="viewcode-block" id="HTTPBadGateway"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.HTTPBadGateway">[docs]</a><span class="k">class</span> <span class="nc">HTTPBadGateway</span><span class="p">(</span><span class="n">ClientException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HTTP 502 - The server was acting as a gateway or proxy and received an invalid response from the upstream server. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">http_status</span> <span class="o">=</span> <span class="mi">502</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Bad Gateway&quot;</span>
+</div>
+<div class="viewcode-block" id="HTTPServiceUnavailable"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.HTTPServiceUnavailable">[docs]</a><span class="k">class</span> <span class="nc">HTTPServiceUnavailable</span><span class="p">(</span><span class="n">ClientException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HTTP 503 - The server is currently unavailable</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">http_status</span> <span class="o">=</span> <span class="mi">503</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Service Unavailable&quot;</span>
+</div>
+<div class="viewcode-block" id="HTTPGatewayTimeout"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.HTTPGatewayTimeout">[docs]</a><span class="k">class</span> <span class="nc">HTTPGatewayTimeout</span><span class="p">(</span><span class="n">ClientException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HTTP 504 - The server was acting as a gateway or proxy and did not receive a timely response from the upstream server.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">http_status</span> <span class="o">=</span> <span class="mi">504</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Gateway Timeout&quot;</span>
+</div>
+<div class="viewcode-block" id="HTTPVersionNotSupported"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.HTTPVersionNotSupported">[docs]</a><span class="k">class</span> <span class="nc">HTTPVersionNotSupported</span><span class="p">(</span><span class="n">ClientException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HTTP 505 - The server does not support the HTTP protocol version used in the request.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">http_status</span> <span class="o">=</span> <span class="mi">505</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Version Not Supported&quot;</span>
+
+
+<span class="c"># In Python 2.4 Exception is old-style and thus doesn&#39;t have a __subclasses__()</span>
+<span class="c"># so we can do this:</span>
+<span class="c">#     _code_map = dict((c.http_status, c)</span>
+<span class="c">#                      for c in ClientException.__subclasses__())</span>
+<span class="c">#</span>
+<span class="c"># Instead, we have to hardcode it:</span></div>
+<span class="n">_code_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">c</span><span class="o">.</span><span class="n">http_status</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">[</span><span class="n">HTTPBadRequest</span><span class="p">,</span> <span class="n">HTTPUnauthorized</span><span class="p">,</span>
+                   <span class="n">HTTPForbidden</span><span class="p">,</span> <span class="n">HTTPNotFound</span><span class="p">,</span> <span class="n">HTTPMethodNotAllowed</span><span class="p">,</span>
+                   <span class="n">HTTPNotAcceptable</span><span class="p">,</span> <span class="n">HTTPProxyAuthRequired</span><span class="p">,</span> <span class="n">HTTPRequestTimeout</span><span class="p">,</span> 
+                   <span class="n">HTTPConflict</span><span class="p">,</span> <span class="n">HTTPGone</span><span class="p">,</span> <span class="n">HTTPLengthRequired</span><span class="p">,</span>
+                   <span class="n">HTTPPreconditionFailed</span><span class="p">,</span> <span class="n">HTTPRequestEntityTooLarge</span><span class="p">,</span>
+                   <span class="n">HTTPRequestURITooLong</span><span class="p">,</span> <span class="n">HTTPUnsupportedMediaType</span><span class="p">,</span>
+                   <span class="n">HTTPRequestedRangeNotSatisfiable</span><span class="p">,</span> <span class="n">HTTPExpectationFailed</span><span class="p">,</span>
+                   <span class="n">HTTPTeaPot</span><span class="p">,</span> <span class="n">HTTPServerError</span><span class="p">,</span>
+                   <span class="n">HTTPNotImplemented</span><span class="p">,</span> <span class="n">HTTPBadGateway</span><span class="p">,</span>
+                   <span class="n">HTTPServiceUnavailable</span><span class="p">,</span> <span class="n">HTTPGatewayTimeout</span><span class="p">,</span>
+                   <span class="n">HTTPVersionNotSupported</span><span class="p">])</span>
+
+
+<div class="viewcode-block" id="from_response"><a class="viewcode-back" href="../../hplefthandclient.html#hplefthandclient.exceptions.from_response">[docs]</a><span class="k">def</span> <span class="nf">from_response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">body</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return an instance of an ClientException or subclass</span>
+<span class="sd">    based on an httplib2 response.</span>
+
+<span class="sd">    Usage:: </span>
+
+<span class="sd">        resp, body = http.request(...)</span>
+<span class="sd">        if resp.status != 200:</span>
+<span class="sd">            raise exception_from_response(resp, body)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cls</span> <span class="o">=</span> <span class="n">_code_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">ClientException</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cls</span><span class="p">(</span><span class="n">body</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">HP LeftHand REST Client 1.0.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../hplefthandclient.html" >hplefthandclient</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013 Hewlett Packard Development Company, L.P..
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
