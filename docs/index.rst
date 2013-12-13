@@ -5,9 +5,9 @@ Overview
 --------
 **HPLeftHandClient** is a Python package containing a class that uses 
 HTTP REST calls to talk with an HP LeftHand/StoreVirtual drive array.
-distribution containing tools for working with
+The distribution containing tools for working with
 `LeftHand/StoreVirtual Storage Arrays <http://www.hp.com/go/storevirtual>`_. 
-. This documentation attempts to explain
+This documentation attempts to explain
 everything you need to know to use **HPLeftHandClient**.
 
 :doc:`installation`
@@ -26,7 +26,7 @@ Issues
 
 All issues should be reported (and can be tracked / voted for /
 commented on) at the main `github issues
-<https://github.com/WaltHP/python-hplefthandclient/issues>`_, in the "LeftHand Python Driver"
+<https://github.com/WaltHP/python-lefthandclient/issues>`_, in the "LeftHand Python Driver"
 project.
 
 Changes
