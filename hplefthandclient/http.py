@@ -74,7 +74,6 @@ class HTTPJSONRESTClient(httplib2.Http):
     def set_url(self, api_url):
         #should be http://<Server:Port>/lhos
         self.api_url = api_url.rstrip('/')
-        self.api_url = self.api_url
 
     def set_debug_flag(self, flag):
         """
@@ -211,7 +210,7 @@ class HTTPJSONRESTClient(httplib2.Http):
         return resp, body
 
     def _do_reauth(self, url, method, ex, **kwargs):
-        print "_do_reauth called"
+        print("_do_reauth called")
         try:
             if self.auth_try != 1:
                 self._reauth()
@@ -231,12 +230,12 @@ class HTTPJSONRESTClient(httplib2.Http):
             resp, body = self._time_request(self.api_url + url, method,
                                             **kwargs)
             return resp, body
-        except exceptions.HTTPUnauthorized, ex:
-            print "_CS_REQUEST HTTPUnauthorized"
+        except exceptions.HTTPUnauthorized as ex:
+            print("_CS_REQUEST HTTPUnauthorized")
             resp, body = self._do_reauth(url, method, ex, **kwargs)
             return resp, body
-        except exceptions.HTTPForbidden, ex:
-            print "_CS_REQUEST HTTPForbidden"
+        except exceptions.HTTPForbidden as ex:
+            print("_CS_REQUEST HTTPForbidden")
             resp, body = self._do_reauth(url, method, ex, **kwargs)
             return resp, body
 
