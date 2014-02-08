@@ -1,0 +1,9 @@
+Document: python-hplefthandclient
+Title: Python HP LeftHand client
+Author: N/A
+Abstract: Sphinx documentation for HP LeftHand client
+Section: Programming/Python
+
+Format: HTML
+Index: /usr/share/doc/python-hplefthandclient-doc/html/index.html
+Files: /usr/share/doc/python-hplefthandclient-doc/html/*

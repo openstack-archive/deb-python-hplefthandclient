@@ -1,0 +1,30 @@
+#!/usr/bin/make -f
+
+PYTHONS:=$(shell pyversions -vr)
+PYTHON3S:=$(shell py3versions -vr)
+
+UPSTREAM_GIT = git://github.com/<please-user>/hplefthandclient.git
+-include /usr/share/openstack-pkg-tools/pkgos.make
+
+%:
+	dh $@ --buildsystem=python_distutils --with python2,python3,sphinxdoc
+
+override_dh_install:
+	set -e && for pyvers in $(PYTHONS); do \
+		python$$pyvers setup.py install --install-layout=deb \
+			--root $(CURDIR)/debian/python-hplefthandclient; \
+	done
+	set -e && for pyvers in $(PYTHON3S); do \
+		python$$pyvers setup.py install --install-layout=deb \
+			--root $(CURDIR)/debian/python3-hplefthandclient; \
+	done
+
+#override_dh_auto_test:
+#ifeq (,$(findstring nocheck, $(DEB_BUILD_OPTIONS)))
+#	set -e && cd test && nosetests --tc-file config.ini
+#endif
+
+override_dh_sphinxdoc:
+	sphinx-build -b html docs debian/python-hplefthandclient-doc/usr/share/doc/python-hplefthandclient-doc/html
+	rm debian/python-hplefthandclient-doc/usr/share/doc/python-hplefthandclient-doc/html/_static/empty_dir
+	dh_sphinxdoc -O--buildsystem=python_distutils

@@ -1,0 +1,60 @@
+Source: python-hplefthandclient
+Section: python
+Priority: optional
+Maintainer: PKG OpenStack <openstack-devel@lists.alioth.debian.org>
+Uploaders: Julien Danjou <acid@debian.org>,
+           Thomas Goirand <zigo@debian.org>,
+           Mehdi Abaakouk <sileht@sileht.net>
+Build-Depends: debhelper (>= 9),
+               python-all (>= 2.6.6-3~),
+               python-httplib2,
+               python-nose,
+               python-nose-testconfig,
+               python-setuptools,
+               python-sphinx,
+ python3-all,
+               python3-setuptools
+Standards-Version: 3.9.5
+Vcs-Browser: http://anonscm.debian.org/gitweb/?p=openstack/python-hplefthandclient.git
+Vcs-Git: git://anonscm.debian.org/openstack/python-hplefthandclient.git
+Homepage: http://packages.python.org/hplefthandclient
+
+Package: python-hplefthandclient
+Architecture: all
+Pre-Depends: dpkg (>= 1.15.6~)
+Depends: ${misc:Depends}, ${python:Depends}
+Description: HP LeftHand/StoreVirtual HTTP REST Client - Python 2.x
+ This is a Client library that can talk to the HP LeftHand/StoreVirtual Storage
+ array. The HP LeftHand storage array has a REST web service interface.
+ .
+ This client library implements a simple interface to talk with that REST
+ interface using the Python httplib2 http library.
+ .
+ This package contains the Python 2.x module.
+
+Package: python3-hplefthandclient
+Architecture: all
+Pre-Depends: dpkg (>= 1.15.6~)
+Depends: ${misc:Depends}, ${python3:Depends}
+Description: HP LeftHand/StoreVirtual HTTP REST Client - Python 3.x
+ This is a Client library that can talk to the HP LeftHand/StoreVirtual Storage
+ array. The HP LeftHand storage array has a REST web service interface.
+ .
+ This client library implements a simple interface to talk with that REST
+ interface using the Python httplib2 http library.
+ .
+ This package contains the Python 3.x module.
+
+Package: python-hplefthandclient-doc
+Section: doc
+Architecture: all
+Pre-Depends: dpkg (>= 1.15.6~)
+Depends: ${misc:Depends}, ${sphinxdoc:Depends}
+Description: HP LeftHand/StoreVirtual HTTP REST Client - doc
+ This is a Client library that can talk to the HP LeftHand/StoreVirtual Storage
+ array. The HP LeftHand storage array has a REST web service interface.
+ .
+ This client library implements a simple interface to talk with that REST
+ interface using the Python httplib2 http library.
+ .
+ This package contains the documentation.
