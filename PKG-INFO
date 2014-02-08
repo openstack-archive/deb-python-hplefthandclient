@@ -1,0 +1,22 @@
+Metadata-Version: 1.1
+Name: hplefthandclient
+Version: 1.0.1
+Summary: HP LeftHand/StoreVirtual HTTP REST Client
+Home-page: http://packages.python.org/hplefthandclient
+Author: Kurt Martin
+Author-email: kurt.f.martin@hp.com
+License: Apache License, Version 2.0
+Description: UNKNOWN
+Keywords: hp,lefthand,storevirtual,rest
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Environment :: Web Environment
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2.6
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3.0
+Classifier: Topic :: Internet :: WWW/HTTP
+Requires: httplib2(>=0.6.0)
+Provides: hplefthandclient
