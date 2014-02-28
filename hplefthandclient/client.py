@@ -302,18 +302,22 @@ class HPLeftHandClient:
         response, body = self.http.get('/volumes')
         return body
 
-    def getVolume(self, volume_id):
+    def getVolume(self, volume_id, query=None):
         """
         Get information about a volume
 
         :param volume_id: The id of the volume to find
+        :param query: Optional query parameter, e.g. fields, expand-links
         :type volume_id: str
 
         :returns: volume
         :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound` -
         NON_EXISTENT_VOL - volume doesn't exist
         """
-        response, body = self.http.get('/volumes/%s' % volume_id)
+        uri = '/volumes/%s' % volume_id
+        if query:
+            uri = uri + '?' + query
+        response, body = self.http.get(uri)
         return body
 
     def getVolumeByName(self, name):
