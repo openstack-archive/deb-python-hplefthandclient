@@ -17,3 +17,8 @@ Changes in Version 1.0.2
 
 - Added support for query parameter in getVolume
 
+Changes in Version 1.0.3
+------------------------
+
+- Added missing Flask imports so that running unit tests against the mock LHOS 
+  pass
