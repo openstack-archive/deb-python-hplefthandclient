@@ -22,10 +22,20 @@ sys.path.insert(0, os.path.realpath(os.path.abspath('../')))
 from hplefthandclient import exceptions
 import test_HPLeftHandClient_base
 
-VOLUME_NAME1 = 'VOLUME1_UNIT_TEST'
-VOLUME_NAME2 = 'VOLUME2_UNIT_TEST'
-VOLUME_NAME3 = 'VOLUME3_UNIT_TEST'
-SNAP_NAME1 = 'SNAP_UNIT_TEST'
+import datetime
+import time
+
+VOLUME_NAME1 = 'VOLUME1_UNIT_TEST_' + \
+    datetime.datetime.now().strftime('%m%d%H%M%S%f') \
+
+VOLUME_NAME2 = 'VOLUME2_UNIT_TEST_' + \
+    datetime.datetime.now().strftime('%m%d%H%M%S%f')
+
+VOLUME_NAME3 = 'VOLUME3_UNIT_TEST_' + \
+    datetime.datetime.now().strftime('%m%d%H%M%S%f')
+
+SNAP_NAME1 = 'SNAP_UNIT_TEST_' + \
+    datetime.datetime.now().strftime('%m%d%H%M%S%f')
 
 
 class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
