@@ -152,8 +152,147 @@ def get_cluster_by_name():
 
     throw_error(404, 'NON_EXISTENT_CLUSTER', "cluster doesn't exist")
 
+### SERVERS ####
+
+
+@app.route('/lhos/servers', methods=['POST'])
+def create_server():
+    debugRequest(request)
+    data = json.loads(request.data)
+
+    if 'name' not in data.keys() or data['name'] is None:
+        throw_error(400, 'INVALID_USER_INPUT', 'No server name provided.')
+
+    if 'iscsiIQN' not in data.keys() or data['iscsiIQN'] is None:
+        throw_error(500, 'SERVER_ERROR', 'No iscsiIQN provided.')
+
+    for server in servers['members']:
+        if data['name'] == server['name']:
+            throw_error(500, 'SERVER_ERROR', 'The server already exists.')
+
+    data['id'] = random.randint(1, 2000)
+
+    servers['members'].append(data)
+    servers['total'] += 1
+    return make_response("", 201)
+
+@app.route('/lhos/servers/<server_id>', methods=['DELETE'])
+def delete_server(server_id):
+    debugRequest(request)
+
+    for server in servers['members']:
+        if server['id'] == int(server_id):
+            servers['members'].remove(server)
+            servers['total'] -= 1
+            return make_response("", 200)
+
+    throw_error(500, 'SERVER_ERROR',
+                "The server id '%s' does not exists." % server_id)
+
+@app.route('/lhos/servers', methods=['GET'])
+def get_server():
+    debugRequest(request)
+    server_name = None
+    server_name = request.args.get('name')
+
+    if server_name is not None:
+        for server in servers['members']:
+            if server['name'] == server_name:
+                resp = make_response(json.dumps(server), 200)
+                return resp
+        throw_error(404, 'NON_EXISTENT_VOLUME', "server doesn't exist")
+    else:
+        resp = make_response(json.dumps(servers), 200)
+        return resp
+
+
 ### VOLUMES & SNAPSHOTS ####
 
+
+@app.route('/lhos/volumes/<volume_id>', methods=['POST'])
+def handle_volume_actions(volume_id):
+    debugRequest(request)
+    data = json.loads(request.data)
+
+    valid_keys = {'serverID': None, 'parameters': None,
+                'exclusiveAccess': None,
+                'readAccess': None, 'writeAccess': None, 'action': None,
+                'transport': None, 'lun': None}
+
+    for key in data.keys():
+        if key not in valid_keys.keys():
+            throw_error(400, 'BAD_REQUEST', "Invalid Parameter '%s'" % key)
+
+    # Checking if volume exists.
+    volume = next(
+        (vol for vol in volumes['members']
+        if vol['id'] == int(volume_id)),
+        None
+    )
+
+    if volume is None:
+        throw_error(500, 'VOLUME_ID_NOT_FOUND', "volume doesn't exist")
+
+    # The server_id parameter is only present for some actions so it needs
+    # to be checked for existence.
+    server_id = None
+    if data['parameters'] is not None and 'serverID' in data['parameters']:
+        server_id = data['parameters']['serverID']
+
+        if server_id < 0:
+            throw_error(400, 'INVALID_USER_INPUT', 'Server ID is invalid.')
+
+        # Checking if server exists.
+        server = next(
+            (serv for serv in servers['members']
+            if serv['id'] == server_id),
+            None
+        )
+
+        if server is None:
+            throw_error(500, 'SERVER_ID_NOT_FOUND', "server doesn't exist")
+
+    if data['action'] == "addServerAccess":
+        # Initialize the volumeACL property if it doesn't exist, otherwise
+        # make sure the server access isn't already added for this volume.
+        if volume['volumeACL'] is None:
+            volume['volumeACL'] = []
+        else:
+            existing_server = next(
+                (item for item in volume['volumeACL']
+                if item['server']['name'] == server['name']),
+                None
+            )
+            if existing_server is not None:
+                throw_error(500, 'SERVER_ERROR', 'Server access already added.')
+
+        # Enable server access for this volume.
+        server_info = {
+            'server': {
+                'name': server['name'],
+                'uri': '/lhos/servers/' + str(server['id'])
+            }
+        }
+        volume['volumeACL'].append(server_info)
+    elif data['action'] == "removeServerAccess":
+        # Find the server and remove the access from the volume.  If this is
+        # the last access for the volume, reset the volumeACL property to None.
+        # Do nothing if the server access doesn't exist.
+        if volume['volumeACL'] is not None:
+            for i, item in enumerate(volume['volumeACL']):
+                if item['server']['name'] == server['name']:
+                    volume['volumeACL'].pop(i)
+                    if len(volume['volumeACL']) == 0:
+                        volume['volumeACL'] = None
+                    break
+    elif data['action'] == "createSnapshot":
+        snapshots['members'].append({'name': data['parameters'].get('name'),
+                                     'id': random.randint(1, 2000)})
+        pprint.pprint(snapshots)
+    else:
+        throw_error(500, 'SERVER_ERROR', 'Action does not exist.')
+
+    return make_response("", 200)
 
 @app.route('/lhos/volumes', methods=['GET'])
 def get_volume():
@@ -182,35 +321,13 @@ def get_snapshot():
         pprint.pprint('snapshot name %s' % snapshot_name)
         for snapshot in snapshots['members']:
             if snapshot['name'] == snapshot_name:
-                pprint.pprint('snapshot namei inside %s' % snapshot['name'])
+                pprint.pprint('snapshot name inside %s' % snapshot['name'])
                 resp = make_response(json.dumps(snapshot), 200)
                 return resp
         throw_error(404, 'NON_EXISTENT_SNAPSHOT', "snapshot doesn't exist")
     else:
         resp = make_response(json.dumps(snapshots), 200)
         return resp
-
-
-@app.route('/lhos/volumes/<volume_id>', methods=['POST'])
-def create_snapshot(volume_id):
-    debugRequest(request)
-    data = json.loads(request.data)
-
-    valid_keys = {'action': None, 'parameters': None}
-
-    ## do some fake errors here depending on data
-    for key in data.keys():
-        if key not in valid_keys.keys():
-            throw_error(400, 'INV_INPUT', "Invalid Parameter '%s'" % key)
-
-    for volume in volumes['members']:
-        if volume['id'] == int(volume_id):
-            snapshots['members'].append({'name': data['parameters'].get('name'),
-                                         'id': random.randint(1, 2000)})
-            pprint.pprint(snapshots)
-            return make_response("", 200)
-
-    throw_error(500, 'SERVER_ERROR', "volume doesn't exist")
 
 
 @app.route('/lhos/volumes', methods=['POST'])
@@ -239,6 +356,7 @@ def create_volumes():
             throw_error(500, 'SERVER_ERROR', 'Volume to larger')
 
     data['id'] = random.randint(1, 2000)
+    data['volumeACL'] = None
 
     volumes['members'].append(data)
     return make_response("", 200)
@@ -388,5 +506,9 @@ if __name__ == "__main__":
                 'total': 1,
                 'type': 'cluster',
                 'uri': '/lhos/clusters'}
+
+    #fake servers
+    global servers
+    servers = {'members': [], 'total': 0}
 
     app.run(port=args.port, debug=debugRequests)

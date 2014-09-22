@@ -26,14 +26,22 @@ import time
 import inspect
 from testconfig import config
 from urlparse import urlparse
+import datetime
+
+TIME = datetime.datetime.now().strftime('%H%M%S')
 
 # pip install nose-testconfig
 
 # e.g.
-# nosetests test_HPLeftHandClient_volume.py -v --tc-file config.ini
+# nosetests HPLeftHandClient_volume.py -v --tc-file config.ini
 
 
 class HPLeftHandClientBaseTestCase(unittest.TestCase):
+
+    cluster_id = 0
+    GB_TO_BYTES = 1073741824    # Gibibytes to bytes
+    MISSING_SERVER_ID = sys.maxint
+    MISSING_VOLUME_ID = -1
 
     user = config['TEST']['user']
     password = config['TEST']['pass']
@@ -57,7 +65,7 @@ class HPLeftHandClientBaseTestCase(unittest.TestCase):
             passwordArg = '-password=%s' % self.password
             portArg = '-port=%s' % parsed_url.port
 
-            script = 'test_HPLeftHandMockServer_flask.py'
+            script = 'HPLeftHandMockServer_flask.py'
             path = "%s/%s" % (cwd, script)
             try:
                 if self.startFlask:

@@ -39,7 +39,7 @@ class HPLeftHandClient:
 
     def debug_rest(self, flag):
         """
-        This is useful for debugging requests to LeftHand 
+        This is useful for debugging requests to LeftHand
 
         :param flag: set to True to enable debugging
         :type flag: bool
@@ -333,6 +333,33 @@ class HPLeftHandClient:
         """
         response, body = self.http.get('/volumes?name=%s' % name)
         return body
+
+    def findServerVolumes(self, server_name):
+        """Find volumes that are exported to a server."""
+
+        # The only mechanism we have in 1.0 of the REST API
+        # is to fetch all volumes and filter through them.
+        # So we limit the return fields to cut down on the
+        # n/w usage.
+        # TODO(walter-boring)
+        response, body = self.http.get(
+            '/volumes?fields=members[name],members[volumeACL]')
+
+        # Creates a list of volumes that have read/write access to the
+        # specified server.
+        volumes = [
+            self.getVolumeByName(volume['name'])
+            # Filter out volumes that do not have the volumeACL property set.
+            for volume in body['members']
+            if ('volumeACL' in volume and
+                volume['volumeACL'] is not None)
+            # Filter out volumes that do not have access to the target server.
+            for entry in volume['volumeACL']
+            if ('server' in entry and
+                entry['server']['name'] == server_name)
+        ]
+
+        return volumes
 
     def createVolume(self, name, cluster_id, size, optional=None):
         """ Create a new volume

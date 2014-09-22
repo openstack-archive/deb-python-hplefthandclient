@@ -22,3 +22,12 @@ Changes in Version 1.0.3
 
 - Added missing Flask imports so that running unit tests against the mock LHOS 
   pass
+
+Changes in Version 1.0.4
+------------------------
+
+- Added new API
+  * Find Server Volumes
+- Updated the mock Flask server to support server API
+  calls.
+- Added unit tests for server API calls.

@@ -22,27 +22,14 @@ sys.path.insert(0, os.path.realpath(os.path.abspath('../')))
 from hplefthandclient import exceptions
 import test_HPLeftHandClient_base
 
-import datetime
-import time
-
-VOLUME_NAME1 = 'VOLUME1_UNIT_TEST_' + \
-    datetime.datetime.now().strftime('%m%d%H%M%S%f') \
-
-VOLUME_NAME2 = 'VOLUME2_UNIT_TEST_' + \
-    datetime.datetime.now().strftime('%m%d%H%M%S%f')
-
-VOLUME_NAME3 = 'VOLUME3_UNIT_TEST_' + \
-    datetime.datetime.now().strftime('%m%d%H%M%S%f')
-
-SNAP_NAME1 = 'SNAP_UNIT_TEST_' + \
-    datetime.datetime.now().strftime('%m%d%H%M%S%f')
+VOLUME_NAME1 = 'VOLUME1_UNIT_TEST_' + test_HPLeftHandClient_base.TIME
+VOLUME_NAME2 = 'VOLUME2_UNIT_TEST_' + test_HPLeftHandClient_base.TIME
+VOLUME_NAME3 = 'VOLUME3_UNIT_TEST_' + test_HPLeftHandClient_base.TIME
+SNAP_NAME1 = 'SNAP_UNIT_TEST_' + test_HPLeftHandClient_base.TIME
 
 
 class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
                                      HPLeftHandClientBaseTestCase):
-
-    cluster_id = 0
-    GB_TO_BYTES = 1073741824
 
     def setUp(self):
         super(HPLeftHandClientVolumeTestCase, self).setUp()
@@ -60,14 +47,12 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
         try:
             volume_info = self.cl.getVolumeByName(VOLUME_NAME1)
             self.cl.deleteVolume(volume_info['id'])
-        except Exception as ex:
-            print ex
+        except Exception:
             pass
         try:
             volume_info = self.cl.getVolumeByName(VOLUME_NAME2)
             self.cl.deleteVolume(volume_info['id'])
-        except Exception as ex:
-            print ex
+        except Exception:
             pass
 
         super(HPLeftHandClientVolumeTestCase, self).tearDown()
@@ -80,7 +65,7 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
             optional = {'description': 'test volume',
                         'isThinProvisioned': True}
             self.cl.createVolume(VOLUME_NAME1, self.cluster_id,
-                                 1 * self.GB_TO_BYTES, optional)
+                                 self.GB_TO_BYTES, optional)
         except Exception as ex:
             print ex
             self.fail('Failed to create volume')
@@ -103,7 +88,7 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
             optional = {'description': 'test volume2',
                         'isThinProvisioned': True}
             self.cl.createVolume(VOLUME_NAME2, self.cluster_id,
-                                 1 * self.GB_TO_BYTES, optional)
+                                 self.GB_TO_BYTES, optional)
         except Exception as ex:
             print ex
             self.fail('Failed to create volume')
@@ -129,7 +114,7 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
             optional = {'description': 'test volume',
                         'isThinProvisioned': True}
             self.cl.createVolume(VOLUME_NAME1, self.cluster_id,
-                                 2 * self.GB_TO_BYTES, optional)
+                                 self.GB_TO_BYTES, optional)
         except Exception as ex:
             print ex
             self.fail("Failed to create volume")
@@ -138,7 +123,7 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
                           self.cl.createVolume,
                           VOLUME_NAME1,
                           self.cluster_id,
-                          2 * self.GB_TO_BYTES,
+                          self.GB_TO_BYTES,
                           optional)
         self.printFooter('create_volume_duplicate_name')
 
@@ -169,9 +154,9 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
         self.printHeader('get_volumes')
 
         self.cl.createVolume(VOLUME_NAME1, self.cluster_id,
-                             3 * self.GB_TO_BYTES)
+                             self.GB_TO_BYTES)
         self.cl.createVolume(VOLUME_NAME2, self.cluster_id,
-                             3 * self.GB_TO_BYTES)
+                             self.GB_TO_BYTES)
 
         vol1 = self.cl.getVolumeByName(VOLUME_NAME1)
         vol2 = self.cl.getVolumeByName(VOLUME_NAME2)
@@ -185,11 +170,10 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
 
     def test_3_delete_volume_nonExist(self):
         self.printHeader('delete_volume_nonExist')
-        volume_id = -1
 
         self.assertRaises(exceptions.HTTPServerError,
                           self.cl.deleteVolume,
-                          volume_id)
+                          self.MISSING_VOLUME_ID)
         self.printFooter('delete_volume_nonExist')
 
     def test_3_delete_volumes(self):
@@ -198,7 +182,7 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
         try:
             optional = {'description': 'Made by flask.'}
             self.cl.createVolume(VOLUME_NAME1, self.cluster_id,
-                                 1 * self.GB_TO_BYTES, optional)
+                                 self.GB_TO_BYTES, optional)
             vol1 = self.cl.getVolumeByName(VOLUME_NAME1)
             self.printHeader('vol1 id %s' % vol1['id'])
             self.printHeader('members %s' % vol1)
@@ -209,7 +193,7 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
         try:
             optional = {'description': 'Made by flask.'}
             self.cl.createVolume(VOLUME_NAME2, self.cluster_id,
-                                 1 * self.GB_TO_BYTES, optional)
+                                 self.GB_TO_BYTES, optional)
             vol2 = self.cl.getVolumeByName(VOLUME_NAME2)
             self.printHeader('vol2 id %s' % vol2['id'])
         except Exception as ex:
@@ -242,7 +226,7 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
 
         try:
             self.cl.createVolume(VOLUME_NAME1, self.cluster_id,
-                                 1 * self.GB_TO_BYTES)
+                                 self.GB_TO_BYTES)
             volume_info = self.cl.getVolumeByName(VOLUME_NAME1)
             option = {'inheritAccess': True}
             self.cl.createSnapshot(SNAP_NAME1, volume_info['id'], option)
@@ -261,7 +245,7 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
         self.assertRaises(exceptions.HTTPServerError,
                           self.cl.createSnapshot,
                           'UnitTestSnapshot',
-                          -1,
+                          self.MISSING_VOLUME_ID,
                           optional)
         self.printFooter('create_snapshot_nonExistVolume')
 #testing
