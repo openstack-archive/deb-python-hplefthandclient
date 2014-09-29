@@ -41,7 +41,7 @@ def make_json_app(import_name, **kwargs):
         pprint.pprint(ex)
         pprint.pprint(ex.code)
         #response = jsonify(message=str(ex))
-        response = jsonify(ex)
+        response = json.dumps(ex)
         response.status_code = (ex.code
                                 if isinstance(ex, HTTPException)
                                 else 500)
@@ -86,7 +86,7 @@ def throw_error(http_code, error_code=None,
 def index():
     debugRequest(request)
     if 'username' in session:
-        return 'Logged in as %s' % escape(session['username'])
+        return 'Logged in as %s' % session['username']
     abort(401)
 
 
@@ -176,6 +176,7 @@ def create_server():
     servers['total'] += 1
     return make_response("", 201)
 
+
 @app.route('/lhos/servers/<server_id>', methods=['DELETE'])
 def delete_server(server_id):
     debugRequest(request)
@@ -188,6 +189,7 @@ def delete_server(server_id):
 
     throw_error(500, 'SERVER_ERROR',
                 "The server id '%s' does not exists." % server_id)
+
 
 @app.route('/lhos/servers', methods=['GET'])
 def get_server():
@@ -215,9 +217,9 @@ def handle_volume_actions(volume_id):
     data = json.loads(request.data)
 
     valid_keys = {'serverID': None, 'parameters': None,
-                'exclusiveAccess': None,
-                'readAccess': None, 'writeAccess': None, 'action': None,
-                'transport': None, 'lun': None}
+                  'exclusiveAccess': None,
+                  'readAccess': None, 'writeAccess': None, 'action': None,
+                  'transport': None, 'lun': None}
 
     for key in data.keys():
         if key not in valid_keys.keys():
@@ -225,8 +227,7 @@ def handle_volume_actions(volume_id):
 
     # Checking if volume exists.
     volume = next(
-        (vol for vol in volumes['members']
-        if vol['id'] == int(volume_id)),
+        (vol for vol in volumes['members'] if vol['id'] == int(volume_id)),
         None
     )
 
@@ -244,8 +245,7 @@ def handle_volume_actions(volume_id):
 
         # Checking if server exists.
         server = next(
-            (serv for serv in servers['members']
-            if serv['id'] == server_id),
+            (serv for serv in servers['members'] if serv['id'] == server_id),
             None
         )
 
@@ -260,11 +260,13 @@ def handle_volume_actions(volume_id):
         else:
             existing_server = next(
                 (item for item in volume['volumeACL']
-                if item['server']['name'] == server['name']),
+                 if item['server']['name'] == server['name']),
                 None
             )
             if existing_server is not None:
-                throw_error(500, 'SERVER_ERROR', 'Server access already added.')
+                throw_error(500,
+                            'SERVER_ERROR',
+                            'Server access already added.')
 
         # Enable server access for this volume.
         server_info = {
@@ -293,6 +295,7 @@ def handle_volume_actions(volume_id):
         throw_error(500, 'SERVER_ERROR', 'Action does not exist.')
 
     return make_response("", 200)
+
 
 @app.route('/lhos/volumes', methods=['GET'])
 def get_volume():
@@ -423,7 +426,8 @@ if __name__ == "__main__":
                'restripePendingStatus': 'none',
                'resynchronizationStatus': 'none',
                'scsiLUNStatus': 'available',
-               'serialNumber': '27d18c785f81e91f36a5073fff9233720000000000000018',
+               'serialNumber': '27d18c785f81e91f36a5073fff92337\
+                                20000000000000018',
                'size': 1048576,
                'snapshots': {'name': 'snapshots',
                              'resource': None,
@@ -457,7 +461,8 @@ if __name__ == "__main__":
                  'isMigrating': False,
                  'isPrimary': True,
                  'isThinProvisioned': True,
-                 'iscsiIqn': 'iqn.2003-10.com.lefthandnetworks:mgvsa309:26:vol1-ss-1',
+                 'iscsiIqn':
+                     'iqn.2003-10.com.lefthandnetworks:mgvsa309:26:vol1-ss-1',
                  'managedBy': 0,
                  'migrationStatus': 'none',
                  'modified': '',
@@ -467,7 +472,8 @@ if __name__ == "__main__":
                  'restripePendingStatus': 'none',
                  'resynchronizationStatus': 'none',
                  'scsiLUNStatus': 'available',
-                 'serialNumber': '27d18c785f81e91f36a5073fff923372000000000000001a',
+                 'serialNumber':
+                     '27d18c785f81e91f36a5073fff923372000000000000001a',
                  'sessions': None,
                  'size': 4194304,
                  'snapshotACL': None,
@@ -480,7 +486,8 @@ if __name__ == "__main__":
 
     #fake clusters
     global clusters
-    clusters = {'members': [{'adaptiveOptimizationCapable': False,
+    clusters = {'members': [{
+                'adaptiveOptimizationCapable': False,
                 'created': 'N/A',
                 'description': '',
                 'id': 21,

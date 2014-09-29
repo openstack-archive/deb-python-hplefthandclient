@@ -282,5 +282,6 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
                           optional)
         self.printFooter('create_snapshot_nonExistVolume')
 #testing
-#suite = unittest.TestLoader().loadTestsFromTestCase(HPLeftHandClientVolumeTestCase)
+#suite = unittest.TestLoader().loadTestsFromTestCase(
+#    HPLeftHandClientVolumeTestCase)
 #unittest.TextTestRunner(verbosity=2).run(suite)

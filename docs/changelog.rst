@@ -33,3 +33,4 @@ Changes in Version 1.0.4
 - Added unit tests for server API calls.
 - Added a volume unit test that makes sure that volumes are created with the
   correct size.
+- Added support for PEP8 checks with tox.

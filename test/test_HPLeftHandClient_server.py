@@ -30,6 +30,7 @@ SERVER_NAME2 = 'SERVER2_UNIT_TEST_' + test_HPLeftHandClient_base.TIME
 IQN1 = 'iqn.1993-08.org.debian:01:00000' + test_HPLeftHandClient_base.TIME
 IQN2 = 'iqn.1993-08.org.debian:01:00001' + test_HPLeftHandClient_base.TIME
 
+
 class HPLeftHandClientServerTestCase(test_HPLeftHandClient_base.
                                      HPLeftHandClientBaseTestCase):
 
@@ -77,7 +78,7 @@ class HPLeftHandClientServerTestCase(test_HPLeftHandClient_base.
     def test_1_create_server(self):
         self.printHeader('create_server')
 
-        optional = {'description' : "some comment"}
+        optional = {'description': "some comment"}
         self.cl.createServer(SERVER_NAME1, IQN1, optional=optional)
 
         self.printFooter('create_server')
@@ -85,7 +86,7 @@ class HPLeftHandClientServerTestCase(test_HPLeftHandClient_base.
     def test_1_create_server_duplicate_name(self):
         self.printHeader('create_server_duplicate_name')
 
-        optional = {'description' : "some comment"}
+        optional = {'description': "some comment"}
         self.cl.createServer(SERVER_NAME1, IQN1, optional=optional)
         self.assertRaises(
             exceptions.HTTPServerError,
@@ -99,7 +100,7 @@ class HPLeftHandClientServerTestCase(test_HPLeftHandClient_base.
     def test_1_create_server_missing_name(self):
         self.printHeader('create_server_missing_name')
 
-        optional = {'description' : "some comment"}
+        optional = {'description': "some comment"}
         self.assertRaises(
             exceptions.HTTPBadRequest,
             self.cl.createServer,
@@ -119,7 +120,9 @@ class HPLeftHandClientServerTestCase(test_HPLeftHandClient_base.
         self.cl.createServer(SERVER_NAME1, IQN1)
         volume_info = self.cl.getVolumeByName(VOLUME_NAME1)
         server_info = self.cl.getServerByName(SERVER_NAME1)
-        self.cl.addServerAccess(volume_info['id'], server_info['id'], optional={'lun': 0})
+        self.cl.addServerAccess(volume_info['id'],
+                                server_info['id'],
+                                optional={'lun': 0})
 
         # verify access was added
         volume_info = self.cl.getVolumeByName(VOLUME_NAME1)
@@ -187,7 +190,9 @@ class HPLeftHandClientServerTestCase(test_HPLeftHandClient_base.
         self.cl.createServer(SERVER_NAME1, IQN1)
         volume_info = self.cl.getVolumeByName(VOLUME_NAME1)
         server_info = self.cl.getServerByName(SERVER_NAME1)
-        self.cl.addServerAccess(volume_info['id'], server_info['id'], optional={'lun': 0})
+        self.cl.addServerAccess(volume_info['id'],
+                                server_info['id'],
+                                optional={'lun': 0})
         self.cl.removeServerAccess(volume_info['id'], server_info['id'])
 
         # verify access was removed
@@ -326,7 +331,9 @@ class HPLeftHandClientServerTestCase(test_HPLeftHandClient_base.
 
         self.cl.createServer(SERVER_NAME1, IQN1)
         result = self.cl.getServers()
-        self.assertTrue(self.findInDict(result['members'], 'name', SERVER_NAME1))
+        self.assertTrue(self.findInDict(result['members'],
+                                        'name',
+                                        SERVER_NAME1))
 
         self.printFooter('get_servers')
 

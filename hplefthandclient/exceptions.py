@@ -14,13 +14,14 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-""" 
+"""
 Exceptions for the client
 
 .. module: Exceptions
 
 :Author: Walter A. Boring IV
-:Description: This contains the HTTP exceptions that can come back from the REST calls
+:Description: This contains the HTTP exceptions that can come back from
+the REST calls
 """
 
 
@@ -30,20 +31,24 @@ class UnsupportedVersion(Exception):
     """
     pass
 
+
 class CommandError(Exception):
     pass
+
 
 class AuthorizationFailure(Exception):
     pass
 
+
 class NoUniqueMatch(Exception):
     pass
+
 
 class ClientException(Exception):
     """
     The base exception class for all exceptions this library raises.
 
-    :param error: The error array 
+    :param error: The error array
     :type error: array
 
     """
@@ -71,7 +76,6 @@ class ClientException(Exception):
     def get_description(self):
         return self._error_desc
 
-
     def __str__(self):
         formatted_string = "%s (HTTP %s)" % (self.message, self.http_status)
         if self._error_code:
@@ -84,7 +88,7 @@ class ClientException(Exception):
 
         if self._debug2:
             formatted_string += " (2: '%s')" % self._debug2
-          
+
         return formatted_string
 
 
@@ -125,12 +129,14 @@ class HTTPNotFound(ClientException):
     http_status = 404
     message = "Not found"
 
+
 class HTTPMethodNotAllowed(ClientException):
     """
-    HTTP 405 - Method not Allowed 
+    HTTP 405 - Method not Allowed
     """
     http_status = 405
     message = "Method Not Allowed"
+
 
 class HTTPNotAcceptable(ClientException):
     """
@@ -139,12 +145,14 @@ class HTTPNotAcceptable(ClientException):
     http_status = 406
     message = "Method Not Acceptable"
 
+
 class HTTPProxyAuthRequired(ClientException):
     """
     HTTP 407 - The client must first authenticate itself with the proxy.
     """
     http_status = 407
     message = "Proxy Authentication Required"
+
 
 class HTTPRequestTimeout(ClientException):
     """
@@ -161,33 +169,42 @@ class HTTPConflict(ClientException):
     http_status = 409
     message = "Conflict"
 
+
 class HTTPGone(ClientException):
     """
-    HTTP 410 - Indicates that the resource requested is no longer available and will not be available again.
+    HTTP 410 - Indicates that the resource requested is no longer available
+    and will not be available again.
     """
     http_status = 410
     message = "Gone"
 
+
 class HTTPLengthRequired(ClientException):
     """
-    HTTP 411 - The request did not specify the length of its content, which is required by the requested resource.
+    HTTP 411 - The request did not specify the length of its content, which
+    is required by the requested resource.
     """
     http_status = 411
     message = "Length Required"
 
+
 class HTTPPreconditionFailed(ClientException):
     """
-    HTTP 412 - The server does not meet one of the preconditions that the requester put on the request.
+    HTTP 412 - The server does not meet one of the preconditions that the
+    requester put on the request.
     """
     http_status = 412
     message = "Over limit"
 
+
 class HTTPRequestEntityTooLarge(ClientException):
     """
-    HTTP 413 - The request is larger than the server is willing or able to process
+    HTTP 413 - The request is larger than the server is willing or
+    able to process
     """
     http_status = 413
     message = "Request Entity Too Large"
+
 
 class HTTPRequestURITooLong(ClientException):
     """
@@ -196,26 +213,33 @@ class HTTPRequestURITooLong(ClientException):
     http_status = 414
     message = "Request URI Too Large"
 
+
 class HTTPUnsupportedMediaType(ClientException):
     """
-    HTTP 415 - The request entity has a media type which the server or resource does not support.
+    HTTP 415 - The request entity has a media type which the server or
+    resource does not support.
     """
     http_status = 415
     message = "Unsupported Media Type"
 
+
 class HTTPRequestedRangeNotSatisfiable(ClientException):
     """
-    HTTP 416 - The client has asked for a portion of the file, but the server cannot supply that portion.
+    HTTP 416 - The client has asked for a portion of the file, but the
+    server cannot supply that portion.
     """
     http_status = 416
     message = "Requested Range Not Satisfiable"
 
+
 class HTTPExpectationFailed(ClientException):
     """
-    HTTP 417 - The server cannot meet the requirements of the Expect request-header field.
+    HTTP 417 - The server cannot meet the requirements of the
+    Expect request-header field.
     """
     http_status = 417
     message = "Expectation Failed"
+
 
 class HTTPTeaPot(ClientException):
     """
@@ -231,10 +255,11 @@ class HTTPTeaPot(ClientException):
 
 class HTTPServerError(ClientException):
     """
-    HTTP 500 - 
+    HTTP 500 -
     """
     http_status = 500
     message = "Error"
+
 
 # NotImplemented is a python keyword.
 class HTTPNotImplemented(ClientException):
@@ -244,12 +269,15 @@ class HTTPNotImplemented(ClientException):
     http_status = 501
     message = "Not Implemented"
 
+
 class HTTPBadGateway(ClientException):
     """
-    HTTP 502 - The server was acting as a gateway or proxy and received an invalid response from the upstream server. 
+    HTTP 502 - The server was acting as a gateway or proxy and received
+    an invalid response from the upstream server.
     """
     http_status = 502
     message = "Bad Gateway"
+
 
 class HTTPServiceUnavailable(ClientException):
     """
@@ -258,16 +286,20 @@ class HTTPServiceUnavailable(ClientException):
     http_status = 503
     message = "Service Unavailable"
 
+
 class HTTPGatewayTimeout(ClientException):
     """
-    HTTP 504 - The server was acting as a gateway or proxy and did not receive a timely response from the upstream server.
+    HTTP 504 - The server was acting as a gateway or proxy and did not
+    receive a timely response from the upstream server.
     """
     http_status = 504
     message = "Gateway Timeout"
 
+
 class HTTPVersionNotSupported(ClientException):
     """
-    HTTP 505 - The server does not support the HTTP protocol version used in the request.
+    HTTP 505 - The server does not support the HTTP protocol
+    version used in the request.
     """
     http_status = 505
     message = "Version Not Supported"
@@ -279,17 +311,18 @@ class HTTPVersionNotSupported(ClientException):
 #                      for c in ClientException.__subclasses__())
 #
 # Instead, we have to hardcode it:
-_code_map = dict((c.http_status, c) for c in [HTTPBadRequest, HTTPUnauthorized,
-                   HTTPForbidden, HTTPNotFound, HTTPMethodNotAllowed,
-                   HTTPNotAcceptable, HTTPProxyAuthRequired, HTTPRequestTimeout, 
-                   HTTPConflict, HTTPGone, HTTPLengthRequired,
-                   HTTPPreconditionFailed, HTTPRequestEntityTooLarge,
-                   HTTPRequestURITooLong, HTTPUnsupportedMediaType,
-                   HTTPRequestedRangeNotSatisfiable, HTTPExpectationFailed,
-                   HTTPTeaPot, HTTPServerError,
-                   HTTPNotImplemented, HTTPBadGateway,
-                   HTTPServiceUnavailable, HTTPGatewayTimeout,
-                   HTTPVersionNotSupported])
+_code_map = dict((c.http_status, c) for c in [
+    HTTPBadRequest, HTTPUnauthorized,
+    HTTPForbidden, HTTPNotFound, HTTPMethodNotAllowed,
+    HTTPNotAcceptable, HTTPProxyAuthRequired, HTTPRequestTimeout,
+    HTTPConflict, HTTPGone, HTTPLengthRequired,
+    HTTPPreconditionFailed, HTTPRequestEntityTooLarge,
+    HTTPRequestURITooLong, HTTPUnsupportedMediaType,
+    HTTPRequestedRangeNotSatisfiable, HTTPExpectationFailed,
+    HTTPTeaPot, HTTPServerError,
+    HTTPNotImplemented, HTTPBadGateway,
+    HTTPServiceUnavailable, HTTPGatewayTimeout,
+    HTTPVersionNotSupported])
 
 
 def from_response(response, body):
@@ -297,7 +330,7 @@ def from_response(response, body):
     Return an instance of an ClientException or subclass
     based on an httplib2 response.
 
-    Usage:: 
+    Usage::
 
         resp, body = http.request(...)
         if resp.status != 200:
