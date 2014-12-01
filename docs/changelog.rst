@@ -31,3 +31,5 @@ Changes in Version 1.0.4
 - Updated the mock Flask server to support server API
   calls.
 - Added unit tests for server API calls.
+- Added a volume unit test that makes sure that volumes are created with the
+  correct size.

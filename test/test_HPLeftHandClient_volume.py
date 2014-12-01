@@ -54,6 +54,11 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
             self.cl.deleteVolume(volume_info['id'])
         except Exception:
             pass
+        try:
+            volume_info = self.cl.getVolumeByName(VOLUME_NAME3)
+            self.cl.deleteVolume(volume_info['id'])
+        except Exception:
+            pass
 
         super(HPLeftHandClientVolumeTestCase, self).tearDown()
 
@@ -105,6 +110,34 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
             self.fail("Failed to get volume")
 
         self.printFooter('create_volume')
+
+    def test_1_create_volume_check_size(self):
+        self.printHeader('create_volume_check_size')
+
+        optional = {'description': 'test volume',
+                    'isThinProvisioned': True}
+        self.cl.createVolume(VOLUME_NAME1, self.cluster_id,
+                             self.GB_TO_BYTES, optional)
+
+        optional = {'description': 'test volume 2',
+                    'isThinProvisioned': True}
+        self.cl.createVolume(VOLUME_NAME2, self.cluster_id,
+                             2 * self.GB_TO_BYTES, optional)
+
+        optional = {'description': 'test volume 3',
+                    'isThinProvisioned': True}
+        self.cl.createVolume(VOLUME_NAME3, self.cluster_id,
+                             3 * self.GB_TO_BYTES, optional)
+
+        vol1 = self.cl.getVolumeByName(VOLUME_NAME1)
+        vol2 = self.cl.getVolumeByName(VOLUME_NAME2)
+        vol3 = self.cl.getVolumeByName(VOLUME_NAME3)
+
+        self.assertEqual(self.GB_TO_BYTES, vol1['size'])
+        self.assertEqual(2 * self.GB_TO_BYTES, vol2['size'])
+        self.assertEqual(3 * self.GB_TO_BYTES, vol3['size'])
+
+        self.printFooter('create_volume_check_size')
 
     def test_1_create_volume_duplicate_name(self):
         self.printHeader('create_volume_duplicate_name')
