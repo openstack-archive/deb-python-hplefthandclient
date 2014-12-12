@@ -17,6 +17,9 @@
 
 """
 HPLeftHand HTTP Client
+
+.. module: http
+
 :Author: Walter A. Boring IV
 :Description: This is the HTTP Client that is used to make the actual calls.
  It includes the authentication that knows the cookie name for LH.

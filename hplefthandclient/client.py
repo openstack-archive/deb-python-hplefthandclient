@@ -99,8 +99,8 @@ class HPLeftHandClient:
         :type name: str
 
         :returns: cluster
-        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound` -
-        NON_EXISTENT_CLUSTER - cluster doesn't exist
+        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound`
+            - NON_EXISTENT_CLUSTER - cluster doesn't exist
         """
         response, body = self.http.get('/clusters?name=%s' % name)
         return body
@@ -135,8 +135,8 @@ class HPLeftHandClient:
         :type name: str
 
         :returns: server
-        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound` -
-        NON_EXISTENT_SERVER - server doesn't exist
+        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound`
+            - NON_EXISTENT_SERVER - server doesn't exist
         """
         response, body = self.http.get('/servers?name=%s' % name)
         return body
@@ -168,8 +168,8 @@ class HPLeftHandClient:
             }
 
         :returns: server
-        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound` -
-        NON_EXISTENT_SERVER - server doesn't exist
+        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound`
+            - NON_EXISTENT_SERVER - server doesn't exist
         """
         info = {'name': name, 'iscsiIQN': iqn}
         if optional:
@@ -184,8 +184,8 @@ class HPLeftHandClient:
 
         :param server_id: the server ID to delete
 
-        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound` -
-        NON_EXISTENT_SERVER - The server does not exist
+        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound`
+            - NON_EXISTENT_SERVER - The server does not exist
         """
         response, body = self.http.delete('/servers/%s' % server_id)
         return body
@@ -216,8 +216,8 @@ class HPLeftHandClient:
         :param name: The name of the snapshot to find
 
         :returns: volume
-        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound` -
-        NON_EXISTENT_SNAP - shapshot doesn't exist
+        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound`
+            - NON_EXISTENT_SNAP - shapshot doesn't exist
         """
         response, body = self.http.get('/snapshots?name=%s' % name)
         return body
@@ -258,8 +258,8 @@ class HPLeftHandClient:
 
         :param snapshot_id: the snapshot ID to delete
 
-        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound` -
-        NON_EXISTENT_SNAPSHOT - The snapshot does not exist
+        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound`
+            - NON_EXISTENT_SNAPSHOT - The snapshot does not exist
         """
         response, body = self.http.delete('/snapshots/%s' % snapshot_id)
         return body
@@ -311,8 +311,8 @@ class HPLeftHandClient:
         :type volume_id: str
 
         :returns: volume
-        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound` -
-        NON_EXISTENT_VOL - volume doesn't exist
+        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound`
+            - NON_EXISTENT_VOL - volume doesn't exist
         """
         uri = '/volumes/%s' % volume_id
         if query:
@@ -328,8 +328,8 @@ class HPLeftHandClient:
         :type name: str
 
         :returns: volume
-        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound` -
-        NON_EXISTENT_VOL - volume doesn't exist
+        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound`
+            - NON_EXISTENT_VOL - volume doesn't exist
         """
         response, body = self.http.get('/volumes?name=%s' % name)
         return body
@@ -392,8 +392,8 @@ class HPLeftHandClient:
 
         :returns: List of Volumes
 
-        :raises: :class:`~hplefthandclient.exceptions.HTTPConflict` -
-        EXISTENT_SV - Volume Exists already
+        :raises: :class:`~hplefthandclient.exceptions.HTTPConflict`
+            - EXISTENT_SV - Volume Exists already
         """
         info = {'name': name, 'clusterID': cluster_id, 'size': size}
         if optional:
@@ -409,8 +409,8 @@ class HPLeftHandClient:
         :param name: the name of the volume
         :type name: str
 
-        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound` -
-        NON_EXISTENT_VOL - The volume does not exist
+        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound`
+            - NON_EXISTENT_VOL - The volume does not exist
         """
         response, body = self.http.delete('/volumes/%s' % volume_id)
         return body
@@ -422,8 +422,8 @@ class HPLeftHandClient:
         :type volume_id: str
 
         :returns: volume
-        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound` -
-        NON_EXISTENT_VOL - volume doesn't exist
+        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound`
+            - NON_EXISTENT_VOL - volume doesn't exist
         """
         info = {'volume_id': volume_id}
         info = self._mergeDict(info, optional)
