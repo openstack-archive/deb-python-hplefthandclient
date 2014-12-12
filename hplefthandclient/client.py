@@ -325,7 +325,7 @@ class HPLeftHandClient:
         Get information about a volume by name
 
         :param name: The name of the volume to find
-        :type volume_id: str
+        :type name: str
 
         :returns: volume
         :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound` -
@@ -335,7 +335,13 @@ class HPLeftHandClient:
         return body
 
     def findServerVolumes(self, server_name):
-        """Find volumes that are exported to a server."""
+        """Find volumes that are exported to a server.
+
+        :param server_name: The name of the server to search.
+        :type server_name: str
+
+        :returns: A list of volumes that are on the specified server.
+        """
 
         # The only mechanism we have in 1.0 of the REST API
         # is to fetch all volumes and filter through them.

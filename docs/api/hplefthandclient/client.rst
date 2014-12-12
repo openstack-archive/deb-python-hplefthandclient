@@ -26,6 +26,7 @@
       .. automethod:: getVolumes
       .. automethod:: getVolume
       .. automethod:: getVolumeByName
+      .. automethod:: findServerVolumes
       .. automethod:: createVolume
       .. automethod:: deleteVolume
       .. automethod:: modifyVolume
