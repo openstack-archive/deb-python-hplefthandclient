@@ -31,3 +31,5 @@ Changes in Version 1.0.3
   correct size.
 * Added support for PEP8 checks with tox.
 * Fixed various typos in the documentation.
+* Fix duplicate debug log message issue that can occur when multiple client
+  objects are created.

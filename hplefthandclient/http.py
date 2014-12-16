@@ -56,6 +56,8 @@ class HTTPJSONRESTClient(httplib2.Http):
     SESSION_COOKIE_NAME = 'Authorization'
     #API_VERSION = 'X-API-Version'
     #CHRP_VERSION = 'X_HP-CHRP-Client-Version'
+    http_log_debug = False
+    _logger = logging.getLogger(__name__)
 
     def __init__(self, api_url, insecure=False, http_log_debug=False):
         super(HTTPJSONRESTClient,
@@ -72,8 +74,6 @@ class HTTPJSONRESTClient(httplib2.Http):
         self.force_exception_to_status_code = True
         #self.disable_ssl_certificate_validation = insecure
 
-        self._logger = logging.getLogger(__name__)
-
     def set_url(self, api_url):
         #should be http://<Server:Port>/lhos
         self.api_url = api_url.rstrip('/')
@@ -86,11 +86,11 @@ class HTTPJSONRESTClient(httplib2.Http):
         :type flag: bool
 
         """
-        self.http_log_debug = flag
-        if self.http_log_debug:
+        if not HTTPJSONRESTClient.http_log_debug and flag:
             ch = logging.StreamHandler()
-            self._logger.setLevel(logging.DEBUG)
-            self._logger.addHandler(ch)
+            HTTPJSONRESTClient._logger.setLevel(logging.DEBUG)
+            HTTPJSONRESTClient._logger.addHandler(ch)
+            HTTPJSONRESTClient.http_log_debug = True
 
     def authenticate(self, user, password, optional=None):
         """
@@ -159,15 +159,16 @@ class HTTPJSONRESTClient(httplib2.Http):
             header = ' -H "%s: %s"' % (element, kwargs['headers'][element])
             string_parts.append(header)
 
-        self._logger.debug("\nREQ: %s\n" % "".join(string_parts))
+        HTTPJSONRESTClient._logger.debug("\nREQ: %s\n" % "".join(string_parts))
         if 'body' in kwargs:
-            self._logger.debug("REQ BODY: %s\n" % (kwargs['body']))
+            HTTPJSONRESTClient._logger.debug("REQ BODY: %s\n"
+                                             % (kwargs['body']))
 
     def _http_log_resp(self, resp, body):
         if not self.http_log_debug:
             return
-        self._logger.debug("RESP:%s\n", pprint.pformat(resp))
-        self._logger.debug("RESP BODY:%s\n", body)
+        HTTPJSONRESTClient._logger.debug("RESP:%s\n", pprint.pformat(resp))
+        HTTPJSONRESTClient._logger.debug("RESP BODY:%s\n", body)
 
     def request(self, *args, **kwargs):
         """
