@@ -33,3 +33,7 @@ Changes in Version 1.0.3
 * Fixed various typos in the documentation.
 * Fix duplicate debug log message issue that can occur when multiple client
   objects are created.
+* Updated setup.py package requirements to be consistent with the ones
+  defined in requirements.txt.
+* Updated setup.py package test-requirements to be consistent with the ones
+  defined in test-requirements.txt.

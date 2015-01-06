@@ -17,7 +17,7 @@ setup(
   keywords=["hp", "lefthand", "storevirtual", "rest"],
   requires=['httplib2(>=0.6.0)'],
   install_requires=['httplib2 >= 0.6.0'],
-  tests_require=["nose", "werkzeug", "nose-testconfig"],
+  tests_require=["nose", "nose-testconfig", "flask", "Werkzeug", "flake8"],
   license="Apache License, Version 2.0",
   packages=find_packages(),
   provides=['hplefthandclient'],
@@ -32,6 +32,5 @@ setup(
      'Programming Language :: Python :: 2.7',
      'Programming Language :: Python :: 3.0',
      'Topic :: Internet :: WWW/HTTP',
-     
      ]
   )

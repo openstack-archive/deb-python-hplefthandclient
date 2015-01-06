@@ -1,4 +1,6 @@
 nose
 nose-testconfig
-flake8
 flask
+Werkzeug
+
+flake8 # Used by tox

@@ -1,3 +1,1 @@
-eventlet
-paramiko>=1.13.0
-Werkzeug
+httplib2>=0.6.0
