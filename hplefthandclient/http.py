@@ -119,6 +119,7 @@ class HTTPJSONRESTClient(httplib2.Http):
         self.auth_try = 0
         self.user = user
         self.password = password
+        return resp
 
     def _reauth(self):
         self.authenticate(self.user, self.password, self._auth_optional)

@@ -36,6 +36,7 @@ class HPLeftHandClient:
     def __init__(self, api_url):
         self.api_url = api_url
         self.http = http.HTTPJSONRESTClient(self.api_url)
+        self.api_version = None
 
     def debug_rest(self, flag):
         """
@@ -59,7 +60,8 @@ class HPLeftHandClient:
         :returns: None
 
         """
-        self.http.authenticate(username, password)
+        resp = self.http.authenticate(username, password)
+        self.api_version = resp['x-api-version']
 
     def logout(self):
         """
@@ -69,6 +71,14 @@ class HPLeftHandClient:
 
         """
         self.http.unauthenticate()
+
+    def getApiVersion(self):
+        """
+        This retrieves the API version of the backend.
+
+        :returns:  REST API Version
+        """
+        return self.api_version
 
     def getClusters(self):
         """

@@ -118,6 +118,7 @@ def credentials():
             try:
                 resp = make_response(json.dumps({'key': session_key}), 201)
                 resp.headers['Location'] = '/lhos/credentials/%s' % session_key
+                resp.headers['x-api-version'] = 1.0
                 session['username'] = data['user']
                 session['password'] = data['password']
                 session['session_key'] = session_key

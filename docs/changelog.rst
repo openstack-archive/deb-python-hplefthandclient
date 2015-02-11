@@ -37,3 +37,9 @@ Changes in Version 1.0.3
   defined in requirements.txt.
 * Updated setup.py package test-requirements to be consistent with the ones
   defined in test-requirements.txt.
+
+Changes in Version 1.0.4
+------------------------
+
+* Added new API
+   - Get API Version
