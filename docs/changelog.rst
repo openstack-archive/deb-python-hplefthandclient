@@ -45,3 +45,6 @@ Changes in Version 1.0.4
    - Get API Version
 * Fixed PEP8 violations
 * Added tox environments to run tests with code coverage and to generate the documentation
+* Change GitHub account reference from WaltHP to hp-storage.
+* Modify the steps in the Installing from Source section to ensure correct
+  installation of dependencies and ordering.

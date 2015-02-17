@@ -26,7 +26,7 @@ Issues
 
 All issues should be reported (and can be tracked / voted for /
 commented on) at the main `github issues
-<https://github.com/WaltHP/python-lefthandclient/issues>`_, in the "LeftHand Python Driver"
+<https://github.com/hp-storage/python-lefthandclient/issues>`_, in the "LeftHand Python Driver"
 project.
 
 Changes
