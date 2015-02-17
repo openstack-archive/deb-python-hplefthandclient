@@ -17,10 +17,11 @@
 
 import sys
 import os
-sys.path.insert(0, os.path.realpath(os.path.abspath('../')))
-
-from hplefthandclient import exceptions
 import test_HPLeftHandClient_base
+
+# Add the path for the hplefthandclient modules
+sys.path.insert(0, os.path.realpath(os.path.abspath('../')))
+from hplefthandclient import exceptions
 
 VOLUME_NAME1 = 'VOLUME1_UNIT_TEST_' + test_HPLeftHandClient_base.TIME
 VOLUME_NAME2 = 'VOLUME2_UNIT_TEST_' + test_HPLeftHandClient_base.TIME

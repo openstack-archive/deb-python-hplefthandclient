@@ -138,7 +138,7 @@ def logout_credentials(session_key):
     session.clear()
     return 'DELETE credentials called'
 
-#### CLUSTER INFO ####
+# CLUSTER INFO #
 
 
 @app.route('/lhos/clusters', methods=['GET'])
@@ -153,7 +153,7 @@ def get_cluster_by_name():
 
     throw_error(404, 'NON_EXISTENT_CLUSTER', "cluster doesn't exist")
 
-### SERVERS ####
+# SERVERS #
 
 
 @app.route('/lhos/servers', methods=['POST'])
@@ -209,7 +209,7 @@ def get_server():
         return resp
 
 
-### VOLUMES & SNAPSHOTS ####
+# VOLUMES & SNAPSHOTS #
 
 
 @app.route('/lhos/volumes/<volume_id>', methods=['POST'])

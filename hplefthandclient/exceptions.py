@@ -93,7 +93,7 @@ class ClientException(Exception):
 
 
 ##
-## 400 Errors
+#  400 Errors
 ##
 
 
@@ -250,7 +250,7 @@ class HTTPTeaPot(ClientException):
 
 
 ##
-## 500 Errors
+#  500 Errors
 ##
 
 class HTTPServerError(ClientException):

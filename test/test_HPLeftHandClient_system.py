@@ -17,9 +17,10 @@
 
 import sys
 import os
-sys.path.insert(0, os.path.realpath(os.path.abspath('../')))
-
 import test_HPLeftHandClient_base
+
+# Add the path for the hplefthandclient modules
+sys.path.insert(0, os.path.realpath(os.path.abspath('../')))
 
 
 class HPLeftHandClientSystemTestCase(test_HPLeftHandClient_base.

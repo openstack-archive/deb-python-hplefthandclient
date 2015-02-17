@@ -43,3 +43,4 @@ Changes in Version 1.0.4
 
 * Added new API
    - Get API Version
+* Fixed PEP8 violations

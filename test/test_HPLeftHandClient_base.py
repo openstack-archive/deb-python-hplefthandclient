@@ -17,9 +17,7 @@
 
 import sys
 import os
-sys.path.insert(0, os.path.realpath(os.path.abspath('../')))
 
-from hplefthandclient import client
 import unittest
 import subprocess
 import time
@@ -27,6 +25,10 @@ import inspect
 from testconfig import config
 from urlparse import urlparse
 import datetime
+
+# Add the path for the hplefthandclient modules
+sys.path.insert(0, os.path.realpath(os.path.abspath('../')))
+from hplefthandclient import client
 
 TIME = datetime.datetime.now().strftime('%H%M%S')
 
