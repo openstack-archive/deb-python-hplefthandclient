@@ -4,3 +4,5 @@ flask
 Werkzeug
 
 flake8 # Used by tox
+coverage
+sphinx
