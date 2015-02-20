@@ -99,7 +99,13 @@ class HPLeftHandClientBaseTestCase(unittest.TestCase):
     def printFooter(self, name):
         print "##Compeleted testing '%s\n" % name
 
-    def findInDict(self, dic, key, value):
+    def findInDict(self, dic, key, value=None):
         for i in dic:
-            if key in i and i[key] == value:
-                return True
+            if key in i:
+                if value:
+                    if i[key] == value:
+                        return True
+                else:  # If value is None, only check key
+                    return True
+
+        return False

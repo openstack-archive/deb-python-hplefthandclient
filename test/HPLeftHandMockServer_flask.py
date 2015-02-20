@@ -303,6 +303,8 @@ def get_volume():
     debugRequest(request)
     volume_name = None
     volume_name = request.args.get('name')
+    cluster_name = request.args.get('clusterName')
+    fields = request.args.get('fields')
 
     if volume_name is not None:
         for volume in volumes['members']:
@@ -310,6 +312,16 @@ def get_volume():
                 resp = make_response(json.dumps(volume), 200)
                 return resp
         throw_error(404, 'NON_EXISTENT_VOLUME', "volume doesn't exist")
+    elif cluster_name and fields:  # fake query result
+        volume_subset = {}
+        volume = volumes['members'][0]
+        # only return id,uri and clusterName fields
+        volume_subset['id'] = volume['id']
+        volume_subset['uri'] = volume['uri']
+        volume_subset['clusterName'] = cluster_name
+        volumes_resp = {'members': [volume_subset], 'total': 1}
+        resp = make_response(json.dumps(volumes_resp), 200)
+        return resp
     else:
         resp = make_response(json.dumps(volumes), 200)
         return resp

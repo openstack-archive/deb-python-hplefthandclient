@@ -28,6 +28,13 @@ This client requires and works with version 11.5 of the LeftHand firmware
 
 """
 
+try:
+    # For Python 3.0 and later
+    from urllib.parse import quote
+except ImportError:
+    # Fall back to Python 2's urllib2
+    from urllib2 import quote
+
 from hplefthandclient import http
 
 
@@ -303,13 +310,50 @@ class HPLeftHandClient:
                                         body=info)
         return body
 
-    def getVolumes(self):
+    def getVolumes(self, cluster=None, fields=None):
         """
         Get the list of Volumes
 
+        :param cluster: a cluster name
+        :type cluster: str
+        :param fields: specific fields of the returning data
+        :type fields: list
+
         :returns: list of Volumes
         """
-        response, body = self.http.get('/volumes')
+        fieldsQuery = []
+        query = None
+        if fields:
+            tmpFields = []
+            for field in fields:
+                tmpFields.append(field)
+            fieldsQuery = ('%s' % ','.join(tmpFields))
+
+        if cluster and fieldsQuery:
+            query = ('clusterName=%(cluster)s&fields=%(fieldsQuery)s' %
+                     ({'cluster': quote(cluster.encode('utf8')),
+                       'fieldsQuery': fieldsQuery}))
+        elif cluster:
+            # clusterName is documented, but not working, at this
+            # point will get everything
+            query = 'clusterName=%s' % quote(cluster.encode('utf8'))
+        elif fieldsQuery:
+            query = 'fields=%s' % fieldsQuery
+
+        url = '/volumes'
+        if query:
+            url = '/volumes?%s' % query
+
+        response, body = self.http.get(url)
+
+        # Workaround for clusterName doesn't work in current API
+        if cluster and fields and 'members[clusterName]' in fields:
+            all_members = body['members']
+            cluster_members = [member for member in all_members
+                               if member['clusterName'] == cluster]
+            body['members'] = cluster_members
+            body['total'] = len(cluster_members)
+
         return body
 
     def getVolume(self, volume_id, query=None):

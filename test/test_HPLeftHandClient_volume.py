@@ -198,6 +198,27 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
 
         self.printFooter('get_volumes')
 
+    def test_2_get_volumes_query(self):
+        self.printHeader('get_volumes')
+
+        self.cl.createVolume(VOLUME_NAME1, self.cluster_id,
+                             self.GB_TO_BYTES)
+
+        vols = self.cl.getVolumes(
+            test_HPLeftHandClient_base.HPLeftHandClientBaseTestCase.cluster,
+            fields=['members[id]', 'members[uri]', 'members[clusterName]'])
+
+        self.assertTrue(self.findInDict(vols['members'], 'id'))
+        self.assertTrue(self.findInDict(vols['members'], 'uri'))
+        self.assertTrue(self.findInDict(vols['members'], 'clusterName'))
+        self.assertFalse(self.findInDict(vols['members'], 'name'))
+
+        vols = self.cl.getVolumes(
+            test_HPLeftHandClient_base.HPLeftHandClientBaseTestCase.cluster,
+            fields=None)
+
+        self.printFooter('get_volumes')
+
     def test_3_delete_volume_nonExist(self):
         self.printHeader('delete_volume_nonExist')
 

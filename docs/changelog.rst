@@ -50,3 +50,4 @@ Changes in Version 1.0.4
   installation of dependencies and ordering.
 * Added tox environments to run tests with code coverage and to generate the documentation
 * Consolidated the test/README.rst into the top level README.rst and added clarifications
+* Added the ability for getVolumes to filter based on cluster and fields.
