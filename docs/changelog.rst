@@ -48,3 +48,5 @@ Changes in Version 1.0.4
 * Change GitHub account reference from WaltHP to hp-storage.
 * Modify the steps in the Installing from Source section to ensure correct
   installation of dependencies and ordering.
+* Added tox environments to run tests with code coverage and to generate the documentation
+* Consolidated the test/README.rst into the top level README.rst and added clarifications

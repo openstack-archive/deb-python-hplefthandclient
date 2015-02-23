@@ -1,0 +1,7 @@
+docs/build
+*.pyc
+*.egg-info
+.tox
+docs/html
+.coverage
+cover

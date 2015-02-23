@@ -15,12 +15,8 @@
 
 """Test class of LeftHand Client handling servers """
 
-import sys
-import os
 import test_HPLeftHandClient_base
 
-# Add the path for the hplefthandclient modules
-sys.path.insert(0, os.path.realpath(os.path.abspath('../')))
 from hplefthandclient import exceptions
 
 VOLUME_NAME1 = 'VOLUME1_UNIT_TEST_' + test_HPLeftHandClient_base.TIME

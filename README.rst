@@ -23,7 +23,7 @@ Capabilities
 * Create Snapshot
 * Delete Snapshot
 * Clone Snapshot
-* Get Cluster(s) 
+* Get Cluster(s)
 * Get Cluster by Name
 * Get Server(s)
 * Get Server by Name
@@ -36,24 +36,31 @@ Capabilities
 Installation
 ============
 
-::
+To install::
 
- $ python setup.py install
+ $ sudo pip install .
 
 
 Unit Tests
 ==========
 
-::
+To run all unit tests::
 
- $ pip install nose
- $ pip install nose-testconfig
- $ cd test
- $ nosetests --tc-file config.ini
+ $ tox -e py27
 
+To run a specific test::
+
+ $ tox -e py27 -- test/file.py:class_name.test_method_name
+
+To run all unit tests with code coverage::
+
+ $ tox -e cover
+
+The output of the coverage tests will be placed into the ``coverage`` dir.
 
 Folders
 =======
+
 * docs -- contains the documentation.
 * hplefthandlient -- the actual client.py library
 * test -- unit tests
@@ -63,11 +70,18 @@ Folders
 Documentation
 =============
 
-To view the built documentation point your browser to
+To build the documentation::
 
-::
+ $ tox -e docs
 
-  python-hplefthand/docs/_build/html/index.html
+To view the built documentation point your browser to::
+
+  docs/html/index.html
 
 
+Running Simulators
+==================
 
+Manually run flask server (when config.ini unit=true)::
+
+  $ python test/HPLeftHandMockServer_flask.py -port 5001 -user <USERNAME> -password <PASSWORD> -debug
