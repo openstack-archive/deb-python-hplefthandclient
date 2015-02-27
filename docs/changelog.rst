@@ -51,3 +51,9 @@ Changes in Version 1.0.4
 * Added tox environments to run tests with code coverage and to generate the documentation
 * Consolidated the test/README.rst into the top level README.rst and added clarifications
 * Added the ability for getVolumes to filter based on cluster and fields.
+
+Changes in Version 1.0.5
+------------------------
+
+* Added improved error handling during login attempts.  Errors will now be
+  more descriptive in why a login failed.

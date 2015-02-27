@@ -54,16 +54,27 @@ class ClientException(Exception):
     """
     _error_code = None
     _error_desc = None
+    _error_ref = None
 
     _debug1 = None
     _debug2 = None
 
     def __init__(self, error=None):
-        if error:
-            if 'messageID' in error:
-                self._error_code = error['messageID']
-            if 'message' in error:
-                self._error_desc = error['message']
+        super(ClientException, self).__init__()
+
+        if not error:
+            return
+
+        if isinstance(error, str):
+            # instead of KeyError below, take it and make it the _error_desc.
+            self._error_desc = error
+        else:
+            if 'code' in error:
+                self._error_code = error['code']
+            if 'desc' in error:
+                self._error_desc = error['desc']
+            if 'ref' in error:
+                self._error_ref = error['ref']
 
             if 'debug1' in error:
                 self._debug1 = error['debug1']
@@ -75,6 +86,9 @@ class ClientException(Exception):
 
     def get_description(self):
         return self._error_desc
+
+    def get_ref(self):
+        return self._error_ref
 
     def __str__(self):
         formatted_string = "%s (HTTP %s)" % (self.message, self.http_status)

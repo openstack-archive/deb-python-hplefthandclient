@@ -35,15 +35,17 @@ except ImportError:
     # Fall back to Python 2's urllib2
     from urllib2 import quote
 
-from hplefthandclient import http
+from hplefthandclient import exceptions, http
 
 
 class HPLeftHandClient:
 
-    def __init__(self, api_url):
+    def __init__(self, api_url, debug=False):
         self.api_url = api_url
         self.http = http.HTTPJSONRESTClient(self.api_url)
         self.api_version = None
+
+        self.debug_rest(debug)
 
     def debug_rest(self, flag):
         """
@@ -67,8 +69,21 @@ class HPLeftHandClient:
         :returns: None
 
         """
-        resp = self.http.authenticate(username, password)
-        self.api_version = resp['x-api-version']
+        try:
+            resp = self.http.authenticate(username, password)
+            self.api_version = resp['x-api-version']
+        except Exception as ex:
+            ex_desc = ex.get_description()
+
+            if (ex_desc and "Unable to find the server at" in ex_desc or
+                    "Only absolute URIs are allowed" in ex_desc):
+                raise exceptions.HTTPBadRequest(ex_desc)
+            else:
+                msg = ('Error: \'%s\' - Error communicating with the LeftHand '
+                       'API. Check proxy settings. If error persists, either '
+                       'the LeftHand API is not running or the version of the '
+                       'API is not supported.') % ex_desc
+                raise exceptions.UnsupportedVersion(msg)
 
     def logout(self):
         """
