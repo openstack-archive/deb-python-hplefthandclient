@@ -4,7 +4,7 @@
 .. automodule:: hplefthandclient.client
    :synopsis: HP LeftHand REST Web client
 
-   .. autoclass:: hplefthandclient.client.HPLeftHandClient(api_url)
+   .. autoclass:: hplefthandclient.client.HPLeftHandClient(api_url, secure=False)
 
       .. automethod:: debug_rest
       .. automethod:: login

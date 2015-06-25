@@ -3,11 +3,11 @@ HP LeftHand/StoreVirtual REST Client
 This is a Client library that can talk to the HP LeftHand/StoreVirtual Storage array.
 The HP LeftHand storage array has a REST web service interface.
 This client library implements a simple interface to talk with that REST
-interface using the python httplib2 http library.
+interface using the python Requests http library.
 
 Requirements
 ============
-This branch requires 11.5 version of the LeftHand OS firmware.
+This branch requires 11.5 version or later of the LeftHand OS firmware.
 
 Capabilities
 ============

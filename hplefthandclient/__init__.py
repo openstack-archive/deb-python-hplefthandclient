@@ -24,7 +24,7 @@ HP LeftHand REST Client
 
 """
 
-version_tuple = (1, 0, 6)
+version_tuple = (1, 1, 0)
 
 
 def get_version_string():

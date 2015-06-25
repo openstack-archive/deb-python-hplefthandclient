@@ -45,7 +45,7 @@ class HPLeftHandClient:
 
     def __init__(self, api_url, debug=False, secure=False):
         self.api_url = api_url
-        self.http = http.HTTPJSONRESTClient(self.api_url)
+        self.http = http.HTTPJSONRESTClient(self.api_url, secure=secure)
         self.api_version = None
 
         self.debug_rest(debug)

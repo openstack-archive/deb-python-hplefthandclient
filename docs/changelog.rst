@@ -72,3 +72,11 @@ Changes in Version 1.0.6
 * Snapshotting of multiples volumes at one time has been enabled
 * Added unit test for the Exception class.
 * Removed unused error property from LeftHand exceptions.
+
+Changes in Version 1.1.0
+------------------------
+
+* Replaced all httplib2 calls with Python Request calls
+* SSL certificate verification can be enabled by passing secure=True
+* SSL certificate verification can be done against a self provided .crt file
+  with secure='/path/to/ca-certificates.crt'
