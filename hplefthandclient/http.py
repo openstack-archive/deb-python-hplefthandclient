@@ -27,9 +27,9 @@ HPLeftHand HTTP Client
 """
 
 import logging
-import httplib2
+import requests
 import time
-import pprint
+# requests.packages.urllib3.disable_warnings()
 
 try:
     import json
@@ -39,7 +39,7 @@ except ImportError:
 from hplefthandclient import exceptions
 
 
-class HTTPJSONRESTClient(httplib2.Http):
+class HTTPJSONRESTClient(object):
     """
     An HTTP REST Client that sends and recieves JSON data as the body of the
     HTTP request.
@@ -47,8 +47,8 @@ class HTTPJSONRESTClient(httplib2.Http):
     :param api_url: The url to the LH OS REST service
                     ie. https://<hostname or IP>:<port>/lhos
     :type api_url: str
-    :param insecure: Use https? requires a local certificate
-    :type insecure: bool
+    :param secure: Validate SSL cert? Default will not validate
+    :type secure: bool
 
     """
 
@@ -59,9 +59,7 @@ class HTTPJSONRESTClient(httplib2.Http):
     http_log_debug = False
     _logger = logging.getLogger(__name__)
 
-    def __init__(self, api_url, insecure=False, http_log_debug=False):
-        super(HTTPJSONRESTClient,
-              self).__init__(disable_ssl_certificate_validation=True)
+    def __init__(self, api_url, secure=False, http_log_debug=False):
         self.session_key = None
 
         #should be http://<Server:Port>/lhos
@@ -69,10 +67,7 @@ class HTTPJSONRESTClient(httplib2.Http):
         self.set_debug_flag(http_log_debug)
 
         self.times = []  # [("item", starttime, endtime), ...]
-
-        # httplib2 overrides
-        self.force_exception_to_status_code = True
-        #self.disable_ssl_certificate_validation = insecure
+        self.secure = secure
 
     def set_url(self, api_url):
         #should be http://<Server:Port>/lhos
@@ -168,7 +163,8 @@ class HTTPJSONRESTClient(httplib2.Http):
     def _http_log_resp(self, resp, body):
         if not self.http_log_debug:
             return
-        HTTPJSONRESTClient._logger.debug("RESP:%s\n", pprint.pformat(resp))
+        HTTPJSONRESTClient._logger.debug("RESP:%s\n",
+                                         str(resp).replace('\',', '\'\n'))
         HTTPJSONRESTClient._logger.debug("RESP BODY:%s\n", body)
 
     def request(self, *args, **kwargs):
@@ -186,11 +182,51 @@ class HTTPJSONRESTClient(httplib2.Http):
         if 'body' in kwargs:
             kwargs['headers']['Content-Type'] = 'application/json'
             kwargs['body'] = json.dumps(kwargs['body'])
+            payload = kwargs['body']
+        else:
+            payload = None
+
+        # args[0] contains the URL, args[1] contains the HTTP verb/method
+        http_url = args[0]
+        http_method = args[1]
 
         self._http_log_req(args, kwargs)
-        resp, body = super(HTTPJSONRESTClient, self).request(*args, **kwargs)
+        try:
+            r = requests.request(http_method, http_url, data=payload,
+                                 headers=kwargs['headers'], verify=self.secure)
+        except requests.exceptions.SSLError as err:
+            HTTPJSONRESTClient._logger.error("SSL certificate verification"
+                                             " failed: (%s). You must have a"
+                                             " valid SSL certificate or"
+                                             " disable SSL verification.", err)
+            raise exceptions.SSLCertFailed("SSL Certificate Verification"
+                                           " Failed")
+        except requests.exceptions.RequestException as err:
+            raise exceptions.RequestException("Request Exception: %s" % err)
+        except requests.exceptions.ConnectionError as err:
+            raise exceptions.ConnectionError("Connection Error: %s" % err)
+        except requests.exceptions.HTTPError as err:
+            raise exceptions.HTTPError("HTTP Error: %s" % err)
+        except requests.exceptions.URLRequired as err:
+            raise exceptions.URLRequired("URL Required: %s" % err)
+        except requests.exceptions.TooManyRedirects as err:
+            raise exceptions.TooManyRedirects("Too Many Redirects: %s" % err)
+        except requests.exceptions.Timeout as err:
+            raise exceptions.Timeout("Timeout: %s" % err)
+
+        resp = r.headers
+        body = r.text
         if isinstance(body, bytes):
             body = body.decode('utf-8')
+
+        # resp['status'], status['content-location'], and resp.status need to
+        # be manually set as Python Requests doesnt provide them automatically
+        resp['status'] = str(r.status_code)
+        resp.status = r.status_code
+        if 'location' not in resp:
+            resp['content-location'] = r.url
+
+        r.close()
         self._http_log_resp(resp, body)
 
         # Try and conver the body response to an object

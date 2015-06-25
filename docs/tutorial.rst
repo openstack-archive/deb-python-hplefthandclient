@@ -31,6 +31,13 @@ Doing so is easy:
   #LeftHand server with IP 10.10.10.10 on port 8008.
   cl = client.HPLeftHandClient("https://10.10.10.10:8008/api/v1")
 
+  # SSL certification verification is defaulted to False. In order to
+  # override this, set secure=True. or secure='/path/to/cert.crt'
+  # cl = client.HP3ParClient("https://10.10.10.10:8080/api/v1",
+  #                          secure=True)
+  # cl = client.HP3ParClient("https://10.10.10.10:8080/api/v1",
+  #                          secure='/etc/ssl/certs/ca-certificates.crt')
+
   try:
       cl.login(username, password)
       print "Login worked!"
