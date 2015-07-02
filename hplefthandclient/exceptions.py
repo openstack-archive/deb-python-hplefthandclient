@@ -107,6 +107,19 @@ class ClientException(Exception):
 
 
 ##
+#  SSL Errors
+##
+
+
+class SSLCertFailed(ClientException):
+    """
+    The SSL certificate from the server could not be verified
+    """
+    http_status = ""
+    message = "SSL Certificate Verification Failed"
+
+
+##
 #  400 Errors
 ##
 

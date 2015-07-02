@@ -57,3 +57,12 @@ Changes in Version 1.0.5
 
 * Added improved error handling during login attempts.  Errors will now be
   more descriptive in why a login failed.
+
+Changes in Version 1.0.6
+------------------------
+
+* Python3.4+ compliant
+* Added requirements-py3.txt and test-requirements-py3.txt for Python3.4 to
+  pull and install from
+* Updated tox to run py34 tests
+* Modified basic Python calls to work with both Python2 and Python3.4

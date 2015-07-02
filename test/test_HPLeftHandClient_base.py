@@ -23,10 +23,16 @@ import subprocess
 import time
 import inspect
 from testconfig import config
-from urlparse import urlparse
 import datetime
 
 from hplefthandclient import client
+
+try:
+    # For Python 3.0 and later
+    from urllib.parse import urlparse
+except ImportError:
+    # Fall back to Python 2's urllib2
+    from urlparse import urlparse
 
 TIME = datetime.datetime.now().strftime('%H%M%S')
 
@@ -35,7 +41,7 @@ class HPLeftHandClientBaseTestCase(unittest.TestCase):
 
     cluster_id = 0
     GB_TO_BYTES = 1073741824    # Gibibytes to bytes
-    MISSING_SERVER_ID = sys.maxint
+    MISSING_SERVER_ID = sys.maxsize
     MISSING_VOLUME_ID = -1
 
     user = config['TEST']['user']
@@ -94,10 +100,10 @@ class HPLeftHandClientBaseTestCase(unittest.TestCase):
             self.mockServer.kill()
 
     def printHeader(self, name):
-        print "\n##Start testing '%s'" % name
+        print("\n##Start testing '%s'" % name)
 
     def printFooter(self, name):
-        print "##Compeleted testing '%s\n" % name
+        print("##Compeleted testing '%s\n" % name)
 
     def findInDict(self, dic, key, value=None):
         for i in dic:

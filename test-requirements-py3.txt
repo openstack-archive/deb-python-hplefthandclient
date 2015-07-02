@@ -1,0 +1,8 @@
+nose
+nose-testconfig
+flask
+Werkzeug
+
+flake8 # Used by tox
+coverage
+sphinx

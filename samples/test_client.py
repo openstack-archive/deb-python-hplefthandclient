@@ -25,7 +25,7 @@ if "debug" in args and args.debug == True:
 
 
 def test_login():
-    print "Test Login"
+    print("Test Login")
     try:
         cl.login("administrator", "hpinvent")
         pprint.pprint("Login worked")
@@ -34,7 +34,7 @@ def test_login():
 
 
 def test_logout():
-    print "Test Logout"
+    print("Test Logout")
     try:
         cl.login("administrator", "hpinvent")
         pprint.pprint("Login worked")
@@ -49,7 +49,7 @@ def test_logout():
 
 
 def test_get_snapshot(snap_id):
-    print "Get Snapshot"
+    print("Get Snapshot")
     try:
         cl.login("administrator", "hpinvent")
         snap = cl.getSnapshot(snap_id)
@@ -61,7 +61,7 @@ def test_get_snapshot(snap_id):
 
 
 def test_get_snapshot_by_name(name):
-    print "Get Snapshot By Name"
+    print("Get Snapshot By Name")
     try:
         cl.login("administrator", "hpinvent")
         snap = cl.getSnapshotByName(name)
@@ -73,7 +73,7 @@ def test_get_snapshot_by_name(name):
 
 
 def test_create_snapshot():
-    print "Create Snapshot"
+    print("Create Snapshot")
     try:
         cl.login("administrator", "hpinvent")
         vol = cl.createVolume("VolumeSource", 20, 1048576)
@@ -86,7 +86,7 @@ def test_create_snapshot():
 
 
 def test_get_snapshots():
-    print "Get Snapshots"
+    print("Get Snapshots")
     try:
         cl.login("administrator", "hpinvent")
         snapshots = cl.getSnapshots()
@@ -96,7 +96,7 @@ def test_get_snapshots():
 
 
 def test_get_servers():
-    print "Get Servers"
+    print("Get Servers")
     try:
         cl.login("administrator", "hpinvent")
         servers = cl.getServers()
@@ -106,7 +106,7 @@ def test_get_servers():
 
 
 def test_get_server(server_id):
-    print "Get Server"
+    print("Get Server")
     try:
         cl.login("administrator", "hpinvent")
         server = cl.getServer(server_id)
@@ -116,7 +116,7 @@ def test_get_server(server_id):
 
 
 def test_get_server_by_name(name):
-    print "Get Server By Name"
+    print("Get Server By Name")
     try:
         cl.login("administrator", "hpinvent")
         server = cl.getServerByName(name)
@@ -126,7 +126,7 @@ def test_get_server_by_name(name):
 
 
 def test_get_volume(volume_id):
-    print "Get Volumes"
+    print("Get Volumes")
     try:
         cl.login("administrator", "hpinvent")
         volume = cl.getVolume(volume_id)
@@ -136,7 +136,7 @@ def test_get_volume(volume_id):
 
 
 def test_get_volume_by_name(name):
-    print "Get Volume By Name"
+    print("Get Volume By Name")
     try:
         cl.login("administrator", "hpinvent")
         volume = cl.getVolumeByName(name)
@@ -146,7 +146,7 @@ def test_get_volume_by_name(name):
 
 
 def test_get_volumes():
-    print "Get Volumes"
+    print("Get Volumes")
     try:
         cl.login("administrator", "hpinvent")
         volumes = cl.getVolumes()
@@ -156,7 +156,7 @@ def test_get_volumes():
 
 
 def test_get_clusters():
-    print "Get Clusters"
+    print("Get Clusters")
     try:
         cl.login("administrator", "hpinvent")
         volumes = cl.getClusters()
@@ -166,7 +166,7 @@ def test_get_clusters():
 
 
 def test_get_cluster_by_name(name):
-    print "Get Cluster By Name"
+    print("Get Cluster By Name")
     try:
         cl.login("administrator", "hpinvent")
         volumes = cl.getClusterByName(name)
@@ -176,7 +176,7 @@ def test_get_cluster_by_name(name):
 
 
 def test_create_volume():
-    print "Create Volumes"
+    print("Create Volumes")
     try:
         cl.login("administrator", "hpinvent")
         vol = cl.createVolume("Volume1", 20, 1048576)
@@ -187,7 +187,7 @@ def test_create_volume():
 
 
 def test_delete_volume(volume_id):
-    print "Delete a Volume"
+    print("Delete a Volume")
     try:
         cl.login("administrator", "hpinvent")
         vol = cl.deleteVolume(volume_id)
@@ -197,14 +197,14 @@ def test_delete_volume(volume_id):
 
 
 def test_error():
-    print "test Error"
+    print("test Error")
     try:
         cl.login("administrator", "hpinvent")
         resp, body = cl.http.get('/throwerror')
         pprint.pprint(resp)
         pprint.pprint(body)
     except Exception as ex:
-        print ex
+        print(ex)
 
 #test_login()
 #test_logout()

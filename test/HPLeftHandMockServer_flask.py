@@ -51,7 +51,7 @@ def make_json_app(import_name, **kwargs):
     #app.debug = True
     app.secret_key = id_generator(24)
 
-    for code in default_exceptions.iterkeys():
+    for code in default_exceptions.keys():
         app.error_handler_spec[None][code] = make_json_error
 
     return app
@@ -63,7 +63,7 @@ session_key = id_generator(24)
 
 def debugRequest(request):
     if debugRequests:
-        print "\n"
+        print("\n")
         pprint.pprint(request)
         pprint.pprint(request.headers)
         pprint.pprint(request.data)
@@ -111,7 +111,7 @@ def credentials():
         return 'GET credentials called'
 
     elif request.method == 'POST':
-        data = json.loads(request.data)
+        data = json.loads(request.data.decode('utf-8'))
 
         if data['user'] == user_name and data['password'] == user_pass:
             #do something good here
@@ -159,12 +159,12 @@ def get_cluster_by_name():
 @app.route('/lhos/servers', methods=['POST'])
 def create_server():
     debugRequest(request)
-    data = json.loads(request.data)
+    data = json.loads(request.data.decode('utf-8'))
 
-    if 'name' not in data.keys() or data['name'] is None:
+    if 'name' not in list(data.keys()) or data['name'] is None:
         throw_error(400, 'INVALID_USER_INPUT', 'No server name provided.')
 
-    if 'iscsiIQN' not in data.keys() or data['iscsiIQN'] is None:
+    if 'iscsiIQN' not in list(data.keys()) or data['iscsiIQN'] is None:
         throw_error(500, 'SERVER_ERROR', 'No iscsiIQN provided.')
 
     for server in servers['members']:
@@ -215,15 +215,15 @@ def get_server():
 @app.route('/lhos/volumes/<volume_id>', methods=['POST'])
 def handle_volume_actions(volume_id):
     debugRequest(request)
-    data = json.loads(request.data)
+    data = json.loads(request.data.decode('utf-8'))
 
     valid_keys = {'serverID': None, 'parameters': None,
                   'exclusiveAccess': None,
                   'readAccess': None, 'writeAccess': None, 'action': None,
                   'transport': None, 'lun': None}
 
-    for key in data.keys():
-        if key not in valid_keys.keys():
+    for key in list(data.keys()):
+        if key not in list(valid_keys.keys()):
             throw_error(400, 'BAD_REQUEST', "Invalid Parameter '%s'" % key)
 
     # Checking if volume exists.
@@ -349,16 +349,16 @@ def get_snapshot():
 @app.route('/lhos/volumes', methods=['POST'])
 def create_volumes():
     debugRequest(request)
-    data = json.loads(request.data)
+    data = json.loads(request.data.decode('utf-8'))
 
     valid_keys = {'name': None, 'isThinProvisioned': None, 'size': None,
                   'description': None, 'clusterID': None}
 
-    for key in data.keys():
-        if key not in valid_keys.keys():
+    for key in list(data.keys()):
+        if key not in list(valid_keys.keys()):
             throw_error(500, 'SERVER_ERROR', "Invalid Parameter '%s'" % key)
 
-    if 'name' in data.keys():
+    if 'name' in list(data.keys()):
         for vol in volumes['members']:
             if vol['name'] == data['name']:
                 throw_error(500, 'SERVER_ERROR',
@@ -367,7 +367,7 @@ def create_volumes():
         throw_error(500, 'SERVER_ERROR',
                     'No volume name provided.')
 
-    if 'size' in data.keys():
+    if 'size' in list(data.keys()):
         if data['size'] > 17592188141567:
             throw_error(500, 'SERVER_ERROR', 'Volume to larger')
 

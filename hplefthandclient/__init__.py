@@ -19,12 +19,12 @@ HP LeftHand REST Client
 
 :Author: Kurt Martin
 :Author: Walter A. Boring IV
-:Copyright: Copyright 2013, Hewlett Packard Development Company, L.P.
+:Copyright: Copyright 2013-2015, Hewlett Packard Development Company, L.P.
 :License: Apache v2.0
 
 """
 
-version_tuple = (1, 0, 5)
+version_tuple = (1, 0, 6)
 
 
 def get_version_string():

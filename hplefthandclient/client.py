@@ -78,6 +78,8 @@ class HPLeftHandClient:
             if (ex_desc and "Unable to find the server at" in ex_desc or
                     "Only absolute URIs are allowed" in ex_desc):
                 raise exceptions.HTTPBadRequest(ex_desc)
+            if (ex_desc and "SSL Certificate Verification Failed" in ex_desc):
+                raise exceptions.SSLCertFailed()
             else:
                 msg = ('Error: \'%s\' - Error communicating with the LeftHand '
                        'API. Check proxy settings. If error persists, either '

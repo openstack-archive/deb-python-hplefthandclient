@@ -69,7 +69,7 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
             self.cl.createVolume(VOLUME_NAME1, self.cluster_id,
                                  self.GB_TO_BYTES, optional)
         except Exception as ex:
-            print ex
+            print(ex)
             self.fail('Failed to create volume')
             return
 
@@ -81,7 +81,7 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
             self.assertEqual(VOLUME_NAME1, volName)
 
         except Exception as ex:
-            print ex
+            print(ex)
             self.fail('Failed to get volume')
             return
 
@@ -92,7 +92,7 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
             self.cl.createVolume(VOLUME_NAME2, self.cluster_id,
                                  self.GB_TO_BYTES, optional)
         except Exception as ex:
-            print ex
+            print(ex)
             self.fail('Failed to create volume')
             return
 
@@ -103,7 +103,7 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
             volName = vol2['name']
             self.assertEqual(VOLUME_NAME2, volName)
         except Exception as ex:
-            print ex
+            print(ex)
             self.fail("Failed to get volume")
 
         self.printFooter('create_volume')
@@ -146,7 +146,7 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
             self.cl.createVolume(VOLUME_NAME1, self.cluster_id,
                                  self.GB_TO_BYTES, optional)
         except Exception as ex:
-            print ex
+            print(ex)
             self.fail("Failed to create volume")
 
         self.assertRaises(exceptions.HTTPServerError,
@@ -238,7 +238,7 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
             self.printHeader('vol1 id %s' % vol1['id'])
             self.printHeader('members %s' % vol1)
         except Exception as ex:
-            print ex
+            print(ex)
             self.fail('Failed to create volume %s' % VOLUME_NAME1)
 
         try:
@@ -248,13 +248,13 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
             vol2 = self.cl.getVolumeByName(VOLUME_NAME2)
             self.printHeader('vol2 id %s' % vol2['id'])
         except Exception as ex:
-            print ex
+            print(ex)
             self.fail('Failed to create volume %s' % VOLUME_NAME2)
 
         try:
             self.cl.deleteVolume(vol1['id'])
         except Exception as ex:
-            print ex
+            print(ex)
             self.fail('Failed to delete %s' % vol1['id'])
 
         self.assertRaises(exceptions.HTTPNotFound,
@@ -264,7 +264,7 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
         try:
             self.cl.deleteVolume(vol2['id'])
         except Exception as ex:
-            print ex
+            print(ex)
             self.fail('Failed to delete %s' % vol2['id'])
 
         self.assertRaises(exceptions.HTTPNotFound,
@@ -282,7 +282,7 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
             option = {'inheritAccess': True}
             self.cl.createSnapshot(SNAP_NAME1, volume_info['id'], option)
         except Exception as ex:
-            print ex
+            print(ex)
             self.fail("Failed with unexpected exception")
 
         snap_info = self.cl.getSnapshotByName(SNAP_NAME1)
