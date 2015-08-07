@@ -28,6 +28,9 @@ SNAP_NAME1 = 'SNAP_UNIT_TEST_' + test_HPLeftHandClient_base.TIME
 class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
                                      HPLeftHandClientBaseTestCase):
 
+    # Minimum API version needed for consistency group support
+    MIN_CG_API_VERSION = '1.2'
+
     def setUp(self):
         super(HPLeftHandClientVolumeTestCase, self).setUp()
 
@@ -36,6 +39,7 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
                 test_HPLeftHandClient_base.
                 HPLeftHandClientBaseTestCase.cluster)
             self.cluster_id = cluster_info['id']
+            self.cluster_name = cluster_info['name']
         except Exception:
             pass
 
@@ -299,6 +303,71 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
                           self.MISSING_VOLUME_ID,
                           optional)
         self.printFooter('create_snapshot_nonExistVolume')
+
+    def test_5_create_snapshot_set(self):
+        self.printHeader('create_snapshot_set')
+
+        # dont run this test unless the API version is 1.2 or greater
+        api_version = self.cl.getApiVersion()
+        if api_version < self.MIN_CG_API_VERSION:
+            ex_msg = ('Invalid LeftHand API version found (%(found)s).'
+                      'Version %(minimum)s or greater required.'
+                      'Aborting test.') % {'found': api_version,
+                                           'minimum': self.MIN_CG_API_VERSION}
+            print(ex_msg)
+            self.printFooter('create_snapshot_set')
+            return
+
+        try:
+            self.cl.createVolume(VOLUME_NAME1, self.cluster_id,
+                                 self.GB_TO_BYTES)
+            self.cl.createVolume(VOLUME_NAME2, self.cluster_id,
+                                 self.GB_TO_BYTES)
+            volume1_info = self.cl.getVolumeByName(VOLUME_NAME1)
+            volume2_info = self.cl.getVolumeByName(VOLUME_NAME2)
+            option = {'inheritAccess': True}
+            snap_set = [
+                {"volumeName": VOLUME_NAME1, "volumeId": volume1_info['id'],
+                 "snapshotName": SNAP_NAME1 + "-0"},
+                {"volumeName": VOLUME_NAME2, "volumeId": volume2_info['id'],
+                 "snapshotName": SNAP_NAME1 + "-1"}
+            ]
+            self.cl.createSnapshotSet(volume1_info['id'], snap_set, option)
+        except Exception as ex:
+            print(ex)
+            self.fail("Failed with unexpected exception")
+
+        snap1_info = self.cl.getSnapshotByName(SNAP_NAME1 + "-0")
+        self.cl.deleteSnapshot(snap1_info['id'])
+        snap2_info = self.cl.getSnapshotByName(SNAP_NAME1 + "-1")
+        self.cl.deleteSnapshot(snap2_info['id'])
+        self.printFooter('create_snapshot_set')
+
+    def test_5_create_snapshot_set_nonExistVolume(self):
+        self.printHeader('create_snapshot_set_nonExistVolume')
+
+        # dont run this test unless the API version is 1.2 or greater
+        api_version = self.cl.getApiVersion()
+        if api_version < self.MIN_CG_API_VERSION:
+            ex_msg = ('Invalid LeftHand API version found (%(found)s).'
+                      'Version %(minimum)s or greater required.'
+                      'Aborting test.') % {'found': api_version,
+                                           'minimum': self.MIN_CG_API_VERSION}
+            print(ex_msg)
+            self.printFooter('create_snapshot_set_nonExistVolume')
+            return
+
+        optional = {'description': 'test snapshot set'}
+        snap_set = [
+            {"volumeName": "", "volumeId": 0,
+             "snapshotName": "invalid"}
+        ]
+        self.assertRaises(exceptions.HTTPServerError,
+                          self.cl.createSnapshotSet,
+                          self.MISSING_VOLUME_ID,
+                          snap_set,
+                          optional)
+        self.printFooter('create_snapshot_set_nonExistVolume')
 #testing
 #suite = unittest.TestLoader().loadTestsFromTestCase(
 #    HPLeftHandClientVolumeTestCase)

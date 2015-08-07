@@ -69,3 +69,4 @@ Changes in Version 1.0.6
 * Fixed error that was happening during client initialization when an error
   was missing a description.
 * Fixes clusterId bug in createVolume (Issue #3)
+* Snapshotting of multiples volumes at one time has been enabled

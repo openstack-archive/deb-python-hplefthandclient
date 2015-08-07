@@ -292,6 +292,10 @@ def handle_volume_actions(volume_id):
         snapshots['members'].append({'name': data['parameters'].get('name'),
                                      'id': random.randint(1, 2000)})
         pprint.pprint(snapshots)
+    elif data['action'] == "createSnapshotSet":
+        for snapshot in data['parameters'].get('snapshotSet'):
+            snapshots['members'].append({'name': snapshot['snapshotName'],
+                                         'id': random.randint(1, 2000)})
     else:
         throw_error(500, 'SERVER_ERROR', 'Action does not exist.')
 

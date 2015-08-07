@@ -40,7 +40,10 @@ from hplefthandclient import exceptions, http
 
 class HPLeftHandClient:
 
-    def __init__(self, api_url, debug=False):
+    # Minimum API version needed for consistency group support
+    MIN_CG_API_VERSION = '1.2'
+
+    def __init__(self, api_url, debug=False, secure=False):
         self.api_url = api_url
         self.http = http.HTTPJSONRESTClient(self.api_url)
         self.api_version = None
@@ -280,6 +283,60 @@ class HPLeftHandClient:
             parameters = self._mergeDict(parameters, optional)
 
         info = {'action': 'createSnapshot',
+                'parameters': parameters}
+
+        response, body = self.http.post('/volumes/%s' % source_volume_id,
+                                        body=info)
+        return body
+
+    def createSnapshotSet(self, source_volume_id, snapshot_set,
+                          optional=None):
+        """
+        Create a snapshot of multiple existing volumes
+
+        :param source_volume_id: The base volume you want to snapshot. NOTE:
+                                 Must be the ID of the first volume listed in
+                                 snapshot_set.
+        :type source_volume_id: int
+        :param snapshot_set: Array of SnapshotSet entities. The 1st entry
+                             of the array will always be the current volume.
+        :type snapshot_set: Array
+        :param optional: Dictionary of optional params
+        :type optional: dict
+
+        .. code-block:: python
+            snapshotSet = [
+                {
+                    "volumeName": "myVol1",
+                    "volumeId": 48,
+                    "snapshotName": "myVolSnapshot-0"
+                },
+                {
+                    "volumeName": "myVol2",
+                    "volumeId": 58,
+                    "snapshotName": "myVolSnapshot-1"
+                }
+            ]
+
+            optional = {
+                'description' : "some comment",
+                'inheritAccess' : false
+            }
+
+        """
+        # we need to be on LeftHand API version 1.2 to create a snapshot set
+        if self.api_version < self.MIN_CG_API_VERSION:
+            ex_msg = ('Invalid LeftHand API version found (%(found)s).'
+                      'Version %(minimum)s or greater required.') % {
+                'found': self.api_version,
+                'minimum': self.MIN_CG_API_VERSION}
+            raise exceptions.UnsupportedVersion(ex_msg)
+
+        parameters = {'snapshotSet': snapshot_set}
+        if optional:
+            parameters = self._mergeDict(parameters, optional)
+
+        info = {'action': 'createSnapshotSet',
                 'parameters': parameters}
 
         response, body = self.http.post('/volumes/%s' % source_volume_id,
