@@ -467,7 +467,7 @@ class HPLeftHandClient:
         :raises: :class:`~hplefthandclient.exceptions.HTTPConflict`
             - EXISTENT_SV - Volume Exists already
         """
-        info = {'name': name, 'clusterID': cluster_id, 'size': size}
+        info = {'name': name, 'clusterId': cluster_id, 'size': size}
         if optional:
             info = self._mergeDict(info, optional)
 

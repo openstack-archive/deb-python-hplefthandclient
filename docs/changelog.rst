@@ -72,3 +72,4 @@ Changes in Version 1.1.0
   with secure='/path/to/ca-certificates.crt'
 * Fixed error that was happening during client initialization when an error
   was missing a description.
+* Fixes clusterId bug in createVolume (Issue #3)

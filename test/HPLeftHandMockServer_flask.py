@@ -352,7 +352,7 @@ def create_volumes():
     data = json.loads(request.data.decode('utf-8'))
 
     valid_keys = {'name': None, 'isThinProvisioned': None, 'size': None,
-                  'description': None, 'clusterID': None}
+                  'description': None, 'clusterId': None}
 
     for key in list(data.keys()):
         if key not in list(valid_keys.keys()):
