@@ -58,7 +58,7 @@ Changes in Version 1.0.5
 * Added improved error handling during login attempts.  Errors will now be
   more descriptive in why a login failed.
 
-Changes in Version 1.1.0
+Changes in Version 1.0.6
 ------------------------
 
 * Python3.4+ compliant
@@ -66,10 +66,6 @@ Changes in Version 1.1.0
   pull and install from
 * Updated tox to run py34 tests
 * Modified basic Python calls to work with both Python2 and Python3.4
-* Replaced all httplib2 calls with Python Request calls
-* SSL certificate verification can be enabled by passing secure=True
-* SSL certificate verification can be done against a self provided .crt file
-  with secure='/path/to/ca-certificates.crt'
 * Fixed error that was happening during client initialization when an error
   was missing a description.
 * Fixes clusterId bug in createVolume (Issue #3)

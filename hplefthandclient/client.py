@@ -40,10 +40,9 @@ from hplefthandclient import exceptions, http
 
 class HPLeftHandClient:
 
-    def __init__(self, api_url, debug=False, secure=False):
+    def __init__(self, api_url, debug=False):
         self.api_url = api_url
-        self.secure = secure
-        self.http = http.HTTPJSONRESTClient(self.api_url, secure=self.secure)
+        self.http = http.HTTPJSONRESTClient(self.api_url)
         self.api_version = None
 
         self.debug_rest(debug)
@@ -76,8 +75,8 @@ class HPLeftHandClient:
         except Exception as ex:
             ex_desc = ex.get_description()
 
-            if (ex_desc and ("Unable to find the server at" in ex_desc or
-                             "Only absolute URIs are allowed" in ex_desc)):
+            if (ex_desc and "Unable to find the server at" in ex_desc or
+                    "Only absolute URIs are allowed" in ex_desc):
                 raise exceptions.HTTPBadRequest(ex_desc)
             if (ex_desc and "SSL Certificate Verification Failed" in ex_desc):
                 raise exceptions.SSLCertFailed()
