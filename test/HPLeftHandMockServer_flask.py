@@ -72,7 +72,7 @@ def debugRequest(request):
 def throw_error(http_code, error_code=None,
                 desc=None, debug1=None, debug2=None):
     if error_code:
-        info = {'code': error_code, 'desc': desc}
+        info = {'messageID': error_code, 'message': desc}
         if debug1:
             info['debug1'] = debug1
         if debug2:
@@ -399,12 +399,29 @@ def delete_snapshots(snapshot_id):
     debugRequest(request)
     for snapshot in snapshots['members']:
         if snapshot['id'] == int(snapshot_id):
+            if 'clonePoint' in snapshot and snapshot['clonePoint']:
+                throw_error(500, 'OPERATION_FAILED',
+                            "The snapshot '%s' cannot be deleted because it "
+                            "is a clone point." % snapshot_id)
+
             snapshots['members'].remove(snapshot)
             return make_response("", 200)
 
     throw_error(404, 'NON_EXISTENT_SNAPSHOT',
                 "The snapshot id '%s' does not exists." % snapshot_id)
 
+
+@app.route('/lhos/snapshots/<snapshot_id>', methods=['POST'])
+def handle_snapshot_actions(snapshot_id):
+    data = json.loads(request.data.decode('utf-8'))
+    if data['action'] == "createSmartClone":
+        for snapshot in snapshots['members']:
+            if snapshot['id'] == int(snapshot_id):
+                snapshot['clonePoint'] = True
+                return make_response("", 200)
+
+    throw_error(404, 'NON_EXISTENT_SNAPSHOT',
+                "The snapshot id '%s' does not exists." % snapshot_id)
 
 if __name__ == "__main__":
 

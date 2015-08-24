@@ -69,10 +69,10 @@ class ClientException(Exception):
             # instead of KeyError below, take it and make it the _error_desc.
             self._error_desc = error
         else:
-            if 'code' in error:
-                self._error_code = error['code']
-            if 'desc' in error:
-                self._error_desc = error['desc']
+            if 'messageID' in error:
+                self._error_code = error['messageID']
+            if 'message' in error:
+                self._error_desc = error['message']
             if 'ref' in error:
                 self._error_ref = error['ref']
 

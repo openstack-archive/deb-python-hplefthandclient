@@ -304,6 +304,31 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
                           optional)
         self.printFooter('create_snapshot_nonExistVolume')
 
+    def test_4_delete_snapshot_clonePoint(self):
+        self.printHeader('delete_snapshot_clonePoint')
+
+        # create volume
+        self.cl.createVolume(VOLUME_NAME1, self.cluster_id,
+                             self.GB_TO_BYTES)
+        volume_info = self.cl.getVolumeByName(VOLUME_NAME1)
+
+        # snapshot the volume
+        option = {'inheritAccess': True}
+        self.cl.createSnapshot(SNAP_NAME1, volume_info['id'], option)
+
+        # create volume from snapshot to create 'clone point'
+        snap_info = self.cl.getSnapshotByName(SNAP_NAME1)
+        self.cl.cloneSnapshot(VOLUME_NAME2, snap_info['id'])
+
+        # try and delete snapshot clone point, assert error description
+        # is the error we expect
+        try:
+            self.cl.deleteSnapshot(snap_info['id'])
+        except exceptions.HTTPServerError as ex:
+            in_use_msg = 'cannot be deleted because it is a clone point'
+            assert in_use_msg in ex.get_description()
+        self.printFooter('delete_snapshot_clonePoint')
+
     def test_5_create_snapshot_set(self):
         self.printHeader('create_snapshot_set')
 
