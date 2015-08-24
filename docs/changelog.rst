@@ -70,3 +70,5 @@ Changes in Version 1.0.6
   was missing a description.
 * Fixes clusterId bug in createVolume (Issue #3)
 * Snapshotting of multiples volumes at one time has been enabled
+* Added unit test for the Exception class.
+* Removed unused error property from LeftHand exceptions.

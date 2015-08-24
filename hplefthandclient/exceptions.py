@@ -73,8 +73,6 @@ class ClientException(Exception):
                 self._error_code = error['messageID']
             if 'message' in error:
                 self._error_desc = error['message']
-            if 'ref' in error:
-                self._error_ref = error['ref']
 
             if 'debug1' in error:
                 self._debug1 = error['debug1']
@@ -86,9 +84,6 @@ class ClientException(Exception):
 
     def get_description(self):
         return self._error_desc
-
-    def get_ref(self):
-        return self._error_ref
 
     def __str__(self):
         formatted_string = "%s (HTTP %s)" % (self.message, self.http_status)
