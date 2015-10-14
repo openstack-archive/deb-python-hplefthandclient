@@ -1,3 +1,11 @@
+.. image:: https://img.shields.io/pypi/v/python-lefthandclient.svg
+    :target: https://pypi.python.org/pypi/python-lefthandclient/
+    :alt: Latest Version
+
+.. image:: https://img.shields.io/pypi/dm/python-lefthandclient.svg
+    :target: https://pypi.python.org/pypi/python-lefthandclient/
+    :alt: Downloads
+
 HPE LeftHand/StoreVirtual REST Client
 ===================
 This is a Client library that can talk to the HPE LeftHand/StoreVirtual Storage array.
