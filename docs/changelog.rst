@@ -92,3 +92,5 @@ Changes in Version 2.0.1
 ------------------------
 
 * Allows suppressing of InsecureRequestWarning messages
+* Changes the exception isinstance check to look for basestring/str instead of
+  bytes in order to properly store the error description.

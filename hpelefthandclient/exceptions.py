@@ -24,6 +24,12 @@ Exceptions for the client
 the REST calls
 """
 
+# Python 3+ override
+try:
+    basestring
+except NameError:
+    basestring = str
+
 
 class UnsupportedVersion(Exception):
     """
@@ -65,7 +71,7 @@ class ClientException(Exception):
         if not error:
             return
 
-        if isinstance(error, str):
+        if isinstance(error, basestring):
             # instead of KeyError below, take it and make it the _error_desc.
             self._error_desc = error
         else:
