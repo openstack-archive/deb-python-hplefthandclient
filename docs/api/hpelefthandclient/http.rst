@@ -4,7 +4,8 @@
 .. automodule:: hpelefthandclient.http
    :synopsis: HTTP REST Base Class
 
-   .. autoclass:: hpelefthandclient.http.HTTPJSONRESTClient(api_url, [secure=True[,http_log_debug=False]])
+   .. autoclass:: hpelefthandclient.http.HTTPJSONRESTClient(api_url, secure=True, http_log_debug=False,
+                                                            suppress_ssl_warnings=False)
 
       .. automethod:: authenticate
       .. automethod:: unauthenticate

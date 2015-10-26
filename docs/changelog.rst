@@ -87,3 +87,8 @@ Changes in Version 2.0.0
 * Rebranded the HPLeftHandClient to HPELeftHandClient.
 * Updating the documentation to use the new PyPi project name for the
   client, 'python-lefthandclient'.
+
+Changes in Version 2.0.1
+------------------------
+
+* Allows suppressing of InsecureRequestWarning messages

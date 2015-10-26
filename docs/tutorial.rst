@@ -34,12 +34,12 @@ Doing so is easy:
   # SSL certification verification is defaulted to False. In order to
   # override this, set secure=True. or secure='/path/to/cert.crt'
   # cl = client.HPELeftHandClient("https://10.10.10.10:8081/lhos",
-  #                          secure=True)
+  #                                secure=True)
   # Or, to use ca certificates as documented by Python Requests,
   # pass in the ca-certificates.crt file
   # http://docs.python-requests.org/en/v1.0.4/user/advanced
   # cl = client.HPELeftHandClient("https://10.10.10.10:8081/lhos",
-  #                          secure='/etc/ssl/certs/ca-certificates.crt')
+  #                                secure='/etc/ssl/certs/ca-certificates.crt')
 
   try:
       cl.login(username, password)
