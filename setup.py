@@ -1,4 +1,4 @@
-import hplefthandclient
+import hpelefthandclient
 
 try:
     from setuptools import setup, find_packages
@@ -8,20 +8,20 @@ import sys
 
 
 setup(
-  name='hplefthandclient',
-  version=hplefthandclient.version,
-  description="HP LeftHand/StoreVirtual HTTP REST Client",
+  name='python-lefthandclient',
+  version=hpelefthandclient.version,
+  description="HPE LeftHand/StoreVirtual HTTP REST Client",
   author="Kurt Martin",
-  author_email="kurt.f.martin@hp.com",
+  author_email="kurt.f.martin@hpe.com",
   maintainer="Kurt Martin",
-  keywords=["hp", "lefthand", "storevirtual", "rest"],
+  keywords=["hpe", "lefthand", "storevirtual", "rest"],
   requires=['requests'],
   install_requires=['requests'],
   tests_require=["nose", "nose-testconfig", "flask", "Werkzeug", "flake8"],
   license="Apache License, Version 2.0",
   packages=find_packages(),
   provides=['hplefthandclient'],
-  url="http://packages.python.org/hplefthandclient",
+  url="http://packages.python.org/python-lefthandclient",
   classifiers=[
      'Development Status :: 3 - Alpha',
      'Intended Audience :: Developers',

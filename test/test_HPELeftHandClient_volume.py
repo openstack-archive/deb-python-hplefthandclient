@@ -1,4 +1,4 @@
-# (c) Copyright 2015 Hewlett Packard Development Company, L.P.
+# (c) Copyright 2015 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,29 +14,29 @@
 
 """Test class of LeftHand Client handling volumes & snapshots """
 
-import test_HPLeftHandClient_base
+import test_HPELeftHandClient_base
 
-from hplefthandclient import exceptions
+from hpelefthandclient import exceptions
 
-VOLUME_NAME1 = 'VOLUME1_UNIT_TEST_' + test_HPLeftHandClient_base.TIME
-VOLUME_NAME2 = 'VOLUME2_UNIT_TEST_' + test_HPLeftHandClient_base.TIME
-VOLUME_NAME3 = 'VOLUME3_UNIT_TEST_' + test_HPLeftHandClient_base.TIME
-SNAP_NAME1 = 'SNAP_UNIT_TEST_' + test_HPLeftHandClient_base.TIME
+VOLUME_NAME1 = 'VOLUME1_UNIT_TEST_' + test_HPELeftHandClient_base.TIME
+VOLUME_NAME2 = 'VOLUME2_UNIT_TEST_' + test_HPELeftHandClient_base.TIME
+VOLUME_NAME3 = 'VOLUME3_UNIT_TEST_' + test_HPELeftHandClient_base.TIME
+SNAP_NAME1 = 'SNAP_UNIT_TEST_' + test_HPELeftHandClient_base.TIME
 
 
-class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
-                                     HPLeftHandClientBaseTestCase):
+class HPELeftHandClientVolumeTestCase(test_HPELeftHandClient_base.
+                                      HPELeftHandClientBaseTestCase):
 
     # Minimum API version needed for consistency group support
     MIN_CG_API_VERSION = '1.2'
 
     def setUp(self):
-        super(HPLeftHandClientVolumeTestCase, self).setUp()
+        super(HPELeftHandClientVolumeTestCase, self).setUp()
 
         try:
             cluster_info = self.cl.getClusterByName(
-                test_HPLeftHandClient_base.
-                HPLeftHandClientBaseTestCase.cluster)
+                test_HPELeftHandClient_base.
+                HPELeftHandClientBaseTestCase.cluster)
             self.cluster_id = cluster_info['id']
             self.cluster_name = cluster_info['name']
         except Exception:
@@ -60,7 +60,7 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
         except Exception:
             pass
 
-        super(HPLeftHandClientVolumeTestCase, self).tearDown()
+        super(HPELeftHandClientVolumeTestCase, self).tearDown()
 
     def test_1_create_volume(self):
         self.printHeader('create_volume')
@@ -208,7 +208,7 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
                              self.GB_TO_BYTES)
 
         vols = self.cl.getVolumes(
-            test_HPLeftHandClient_base.HPLeftHandClientBaseTestCase.cluster,
+            test_HPELeftHandClient_base.HPELeftHandClientBaseTestCase.cluster,
             fields=['members[id]', 'members[uri]', 'members[clusterName]'])
 
         self.assertTrue(self.findInDict(vols['members'], 'id'))
@@ -217,7 +217,7 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
         self.assertFalse(self.findInDict(vols['members'], 'name'))
 
         vols = self.cl.getVolumes(
-            test_HPLeftHandClient_base.HPLeftHandClientBaseTestCase.cluster,
+            test_HPELeftHandClient_base.HPELeftHandClientBaseTestCase.cluster,
             fields=None)
 
         self.printFooter('get_volumes')
@@ -394,5 +394,5 @@ class HPLeftHandClientVolumeTestCase(test_HPLeftHandClient_base.
         self.printFooter('create_snapshot_set_nonExistVolume')
 #testing
 #suite = unittest.TestLoader().loadTestsFromTestCase(
-#    HPLeftHandClientVolumeTestCase)
+#    HPELeftHandClientVolumeTestCase)
 #unittest.TextTestRunner(verbosity=2).run(suite)

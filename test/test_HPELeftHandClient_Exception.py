@@ -1,4 +1,4 @@
-# (c) Copyright 2015 Hewlett Packard Development Company, L.P.
+# (c) Copyright 2015 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,19 +14,19 @@
 
 """Test class of LeftHand Client handling exceptions """
 
-import test_HPLeftHandClient_base
+import test_HPELeftHandClient_base
 
-from hplefthandclient import exceptions
+from hpelefthandclient import exceptions
 
 
-class HPLeftHandClientExceptionTestCase(test_HPLeftHandClient_base.
-                                        HPLeftHandClientBaseTestCase):
+class HPELeftHandClientExceptionTestCase(test_HPELeftHandClient_base.
+                                         HPELeftHandClientBaseTestCase):
 
     def setUp(self):
-        super(HPLeftHandClientExceptionTestCase, self).setUp()
+        super(HPELeftHandClientExceptionTestCase, self).setUp()
 
     def tearDown(self):
-        super(HPLeftHandClientExceptionTestCase, self).tearDown()
+        super(HPELeftHandClientExceptionTestCase, self).tearDown()
 
     def test_from_response_string_format(self):
         self.printHeader('from_response')

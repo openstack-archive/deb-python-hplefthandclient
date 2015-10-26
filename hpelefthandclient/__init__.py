@@ -1,6 +1,6 @@
 # vim: tabstop=4 shiftwidth=4 softtabstop=4
 #
-# Copyright 2013 Hewlett Packard Development Company, L.P.
+# (c) Copyright 2013-2015 Hewlett Packard Enterprise Development LP
 # All Rights Reserved.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -15,16 +15,16 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 """
-HP LeftHand REST Client
+HPE LeftHand REST Client
 
 :Author: Kurt Martin
 :Author: Walter A. Boring IV
-:Copyright: Copyright 2013-2015, Hewlett Packard Development Company, L.P.
+:Copyright: Copyright 2013-2015 Hewlett Packard Enterprise Development LP
 :License: Apache v2.0
 
 """
 
-version_tuple = (1, 1, 0)
+version_tuple = (2, 0, 0)
 
 
 def get_version_string():
@@ -33,4 +33,4 @@ def get_version_string():
     return '.'.join(map(str, version_tuple))
 
 version = get_version_string()
-"""Current version of HPLeftHandClient."""
+"""Current version of HPELeftHandClient."""

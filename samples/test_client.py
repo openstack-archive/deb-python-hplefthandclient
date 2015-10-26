@@ -3,13 +3,13 @@ from os import sys
 import os
 import pprint
 
-# this is a hack to get the hp driver module
+# this is a hack to get the hpe driver module
 # and it's utils module on the search path.
 cmd_folder = os.path.realpath(os.path.abspath(".."))
 if cmd_folder not in sys.path:
     sys.path.insert(0, cmd_folder)
 
-from hplefthandclient import client, exceptions
+from hpelefthandclient import client, exceptions
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-debug", help="Turn on http debugging", default=False,
@@ -17,9 +17,9 @@ parser.add_argument("-debug", help="Turn on http debugging", default=False,
 args = parser.parse_args()
 
 
-cl = client.HPLeftHandClient("http://10.10.22.7:8080/lhos")
+cl = client.HPELeftHandClient("http://10.10.22.7:8080/lhos")
 # This is the local flask server url
-#cl = client.HPLeftHandClient("http://127.0.0.1:5000/lhos")
+#cl = client.HPELeftHandClient("http://127.0.0.1:5000/lhos")
 if "debug" in args and args.debug == True:
     cl.debug_rest(True)
 

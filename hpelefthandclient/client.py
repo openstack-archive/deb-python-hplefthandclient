@@ -1,6 +1,6 @@
 # vim: tabstop=4 shiftwidth=4 softtabstop=4
 #
-# Copyright 2012 Hewlett Packard Development Company, L.P.
+# (c) Copyright 2012-2015 Hewlett Packard Enterprise Development LP
 # All Rights Reserved.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -15,9 +15,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 """
-HPLeftHand REST Client
+HPELeftHand REST Client
 
-.. module: HPLeftHandClient
+.. module: HPELeftHandClient
 .. moduleauthor: Kurt Martin
 
 :Author: Kurt Martin
@@ -35,10 +35,10 @@ except ImportError:
     # Fall back to Python 2's urllib2
     from urllib2 import quote
 
-from hplefthandclient import exceptions, http
+from hpelefthandclient import exceptions, http
 
 
-class HPLeftHandClient:
+class HPELeftHandClient(object):
 
     # Minimum API version needed for consistency group support
     MIN_CG_API_VERSION = '1.2'
@@ -136,7 +136,7 @@ class HPLeftHandClient:
         :type name: str
 
         :returns: cluster
-        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound`
+        :raises: :class:`~hpelefthandclient.exceptions.HTTPNotFound`
             - NON_EXISTENT_CLUSTER - cluster doesn't exist
         """
         response, body = self.http.get('/clusters?name=%s' % name)
@@ -159,7 +159,7 @@ class HPLeftHandClient:
         :type server_id: str
 
         :returns: server
-        :raises: :class:`~hplefthandclient.exceptions.HTTPServerError`
+        :raises: :class:`~hpelefthandclient.exceptions.HTTPServerError`
         """
         response, body = self.http.get('/servers/%s' % server_id)
         return body
@@ -172,7 +172,7 @@ class HPLeftHandClient:
         :type name: str
 
         :returns: server
-        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound`
+        :raises: :class:`~hpelefthandclient.exceptions.HTTPNotFound`
             - NON_EXISTENT_SERVER - server doesn't exist
         """
         response, body = self.http.get('/servers?name=%s' % name)
@@ -205,7 +205,7 @@ class HPLeftHandClient:
             }
 
         :returns: server
-        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound`
+        :raises: :class:`~hpelefthandclient.exceptions.HTTPNotFound`
             - NON_EXISTENT_SERVER - server doesn't exist
         """
         info = {'name': name, 'iscsiIQN': iqn}
@@ -221,7 +221,7 @@ class HPLeftHandClient:
 
         :param server_id: the server ID to delete
 
-        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound`
+        :raises: :class:`~hpelefthandclient.exceptions.HTTPNotFound`
             - NON_EXISTENT_SERVER - The server does not exist
         """
         response, body = self.http.delete('/servers/%s' % server_id)
@@ -241,7 +241,7 @@ class HPLeftHandClient:
         Get information about a Snapshot
 
         :returns: snapshot
-        :raises: :class:`~hplefthandclient.exceptions.HTTPServerError`
+        :raises: :class:`~hpelefthandclient.exceptions.HTTPServerError`
         """
         response, body = self.http.get('/snapshots/%s' % snapshot_id)
         return body
@@ -253,7 +253,7 @@ class HPLeftHandClient:
         :param name: The name of the snapshot to find
 
         :returns: volume
-        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound`
+        :raises: :class:`~hpelefthandclient.exceptions.HTTPNotFound`
             - NON_EXISTENT_SNAP - shapshot doesn't exist
         """
         response, body = self.http.get('/snapshots?name=%s' % name)
@@ -349,7 +349,7 @@ class HPLeftHandClient:
 
         :param snapshot_id: the snapshot ID to delete
 
-        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound`
+        :raises: :class:`~hpelefthandclient.exceptions.HTTPNotFound`
             - NON_EXISTENT_SNAPSHOT - The snapshot does not exist
         """
         response, body = self.http.delete('/snapshots/%s' % snapshot_id)
@@ -439,7 +439,7 @@ class HPLeftHandClient:
         :type volume_id: str
 
         :returns: volume
-        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound`
+        :raises: :class:`~hpelefthandclient.exceptions.HTTPNotFound`
             - NON_EXISTENT_VOL - volume doesn't exist
         """
         uri = '/volumes/%s' % volume_id
@@ -456,7 +456,7 @@ class HPLeftHandClient:
         :type name: str
 
         :returns: volume
-        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound`
+        :raises: :class:`~hpelefthandclient.exceptions.HTTPNotFound`
             - NON_EXISTENT_VOL - volume doesn't exist
         """
         response, body = self.http.get('/volumes?name=%s' % name)
@@ -520,7 +520,7 @@ class HPLeftHandClient:
 
         :returns: List of Volumes
 
-        :raises: :class:`~hplefthandclient.exceptions.HTTPConflict`
+        :raises: :class:`~hpelefthandclient.exceptions.HTTPConflict`
             - EXISTENT_SV - Volume Exists already
         """
         info = {'name': name, 'clusterId': cluster_id, 'size': size}
@@ -537,7 +537,7 @@ class HPLeftHandClient:
         :param name: the name of the volume
         :type name: str
 
-        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound`
+        :raises: :class:`~hpelefthandclient.exceptions.HTTPNotFound`
             - NON_EXISTENT_VOL - The volume does not exist
         """
         response, body = self.http.delete('/volumes/%s' % volume_id)
@@ -550,7 +550,7 @@ class HPLeftHandClient:
         :type volume_id: str
 
         :returns: volume
-        :raises: :class:`~hplefthandclient.exceptions.HTTPNotFound`
+        :raises: :class:`~hpelefthandclient.exceptions.HTTPNotFound`
             - NON_EXISTENT_VOL - volume doesn't exist
         """
         info = {'volume_id': volume_id}

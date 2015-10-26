@@ -2,43 +2,43 @@ Tutorial
 ========
 
 This tutorial is intended as an introduction to working with
-**HPLeftHandClient**.
+**HPELeftHandClient**.
 
 Prerequisites
 -------------
-Before we start, make sure that you have the **HPLeftHandClient** distribution
+Before we start, make sure that you have the **HPELeftHandClient** distribution
 :doc:`installed <installation>`. In the Python shell, the following
 should run without raising an exception:
 
 .. code-block:: bash
 
-  >>> import hplefthandclient
+  >>> import hpelefthandclient
 
 This tutorial also assumes that a LeftHand array is up and running and the
 LeftHand OS is running.
 
 Create the Client and login
 ---------------------------
-The first step when working with **HPLeftHandClient** is to create a
-:class:`~hplefthandclient.client.HPLeftHandClient` to the LeftHand drive array
-and logging in to create the session.   You must :meth:`~hplefthandclient.client.HPLeftHandClient.login` prior to calling the other APIs to do work on the LeftHand.
+The first step when working with **HPELeftHandClient** is to create a
+:class:`~hpelefthandclient.client.HPELeftHandClient` to the LeftHand drive array
+and logging in to create the session.   You must :meth:`~hpelefthandclient.client.HPELeftHandClient.login` prior to calling the other APIs to do work on the LeftHand.
 Doing so is easy:
 
 .. code-block:: python
 
-  from hplefthandclient import client, exceptions
+  from hpelefthandclient import client, exceptions
   #this creates the client object and sets the url to the
-  #LeftHand server with IP 10.10.10.10 on port 8008.
-  cl = client.HPLeftHandClient("https://10.10.10.10:8008/api/v1")
+  #LeftHand server with IP 10.10.10.10 on port 8081.
+  cl = client.HPELeftHandClient("https://10.10.10.10:8081/lhos")
 
   # SSL certification verification is defaulted to False. In order to
   # override this, set secure=True. or secure='/path/to/cert.crt'
-  # cl = client.HP3ParClient("https://10.10.10.10:8080/api/v1",
+  # cl = client.HPELeftHandClient("https://10.10.10.10:8081/lhos",
   #                          secure=True)
   # Or, to use ca certificates as documented by Python Requests,
   # pass in the ca-certificates.crt file
   # http://docs.python-requests.org/en/v1.0.4/user/advanced
-  # cl = client.HP3ParClient("https://10.10.10.10:8080/api/v1",
+  # cl = client.HPELeftHandClient("https://10.10.10.10:8081/lhos",
   #                          secure='/etc/ssl/certs/ca-certificates.crt')
 
   try:
@@ -59,7 +59,7 @@ Getting a list of Volumes
 -------------------------
 After you have logged in, you can start making calls to the LeftHand APIs.
 A simple example is getting a list of existing volumes on the array with
-a call to :meth:`~hplefthandclient.client.HPLeftHandClient.getVolumes`.
+a call to :meth:`~hpelefthandclient.client.HPELeftHandClient.getVolumes`.
 
 .. code-block:: python
 

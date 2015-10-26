@@ -1,4 +1,4 @@
-# (c) Copyright 2015 Hewlett Packard Development Company, L.P.
+# (c) Copyright 2015 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,29 +14,29 @@
 
 """Test class of LeftHand Client handling servers """
 
-import test_HPLeftHandClient_base
+import test_HPELeftHandClient_base
 
-from hplefthandclient import exceptions
+from hpelefthandclient import exceptions
 
-VOLUME_NAME1 = 'VOLUME1_UNIT_TEST_' + test_HPLeftHandClient_base.TIME
-VOLUME_NAME2 = 'VOLUME2_UNIT_TEST_' + test_HPLeftHandClient_base.TIME
-VOLUME_NAME3 = 'VOLUME3_UNIT_TEST_' + test_HPLeftHandClient_base.TIME
-SERVER_NAME1 = 'SERVER1_UNIT_TEST_' + test_HPLeftHandClient_base.TIME
-SERVER_NAME2 = 'SERVER2_UNIT_TEST_' + test_HPLeftHandClient_base.TIME
-IQN1 = 'iqn.1993-08.org.debian:01:00000' + test_HPLeftHandClient_base.TIME
-IQN2 = 'iqn.1993-08.org.debian:01:00001' + test_HPLeftHandClient_base.TIME
+VOLUME_NAME1 = 'VOLUME1_UNIT_TEST_' + test_HPELeftHandClient_base.TIME
+VOLUME_NAME2 = 'VOLUME2_UNIT_TEST_' + test_HPELeftHandClient_base.TIME
+VOLUME_NAME3 = 'VOLUME3_UNIT_TEST_' + test_HPELeftHandClient_base.TIME
+SERVER_NAME1 = 'SERVER1_UNIT_TEST_' + test_HPELeftHandClient_base.TIME
+SERVER_NAME2 = 'SERVER2_UNIT_TEST_' + test_HPELeftHandClient_base.TIME
+IQN1 = 'iqn.1993-08.org.debian:01:00000' + test_HPELeftHandClient_base.TIME
+IQN2 = 'iqn.1993-08.org.debian:01:00001' + test_HPELeftHandClient_base.TIME
 
 
-class HPLeftHandClientServerTestCase(test_HPLeftHandClient_base.
-                                     HPLeftHandClientBaseTestCase):
+class HPELeftHandClientServerTestCase(test_HPELeftHandClient_base.
+                                      HPELeftHandClientBaseTestCase):
 
     def setUp(self):
-        super(HPLeftHandClientServerTestCase, self).setUp()
+        super(HPELeftHandClientServerTestCase, self).setUp()
 
         try:
             cluster_info = self.cl.getClusterByName(
-                test_HPLeftHandClient_base.
-                HPLeftHandClientBaseTestCase.cluster)
+                test_HPELeftHandClient_base.
+                HPELeftHandClientBaseTestCase.cluster)
             self.cluster_id = cluster_info['id']
         except Exception:
             pass
@@ -69,7 +69,7 @@ class HPLeftHandClientServerTestCase(test_HPLeftHandClient_base.
         except Exception:
             pass
 
-        super(HPLeftHandClientServerTestCase, self).tearDown()
+        super(HPELeftHandClientServerTestCase, self).tearDown()
 
     def test_1_create_server(self):
         self.printHeader('create_server')

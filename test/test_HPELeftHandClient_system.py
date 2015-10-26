@@ -1,4 +1,4 @@
-# (c) Copyright 2015 Hewlett Packard Development Company, L.P.
+# (c) Copyright 2015 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,17 +14,17 @@
 
 """Test class of LeftHand Client system level APIs """
 
-import test_HPLeftHandClient_base
+import test_HPELeftHandClient_base
 
 
-class HPLeftHandClientSystemTestCase(test_HPLeftHandClient_base.
-                                     HPLeftHandClientBaseTestCase):
+class HPELeftHandClientSystemTestCase(test_HPELeftHandClient_base.
+                                      HPELeftHandClientBaseTestCase):
 
     def setUp(self):
-        super(HPLeftHandClientSystemTestCase, self).setUp()
+        super(HPELeftHandClientSystemTestCase, self).setUp()
 
     def tearDown(self):
-        super(HPLeftHandClientSystemTestCase, self).tearDown()
+        super(HPELeftHandClientSystemTestCase, self).tearDown()
 
     def test_1_get_api_version(self):
         self.printHeader('get_api_version')

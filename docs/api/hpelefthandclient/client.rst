@@ -1,10 +1,10 @@
-:mod:`client` -- HPLeftHandClient
+:mod:`client` -- HPELeftHandClient
 =================================
 
-.. automodule:: hplefthandclient.client
-   :synopsis: HP LeftHand REST Web client
+.. automodule:: hpelefthandclient.client
+   :synopsis: HPE LeftHand REST Web client
 
-   .. autoclass:: hplefthandclient.client.HPLeftHandClient(api_url, secure=False)
+   .. autoclass:: hpelefthandclient.client.HPELeftHandClient(api_url, secure=False)
 
       .. automethod:: debug_rest
       .. automethod:: login

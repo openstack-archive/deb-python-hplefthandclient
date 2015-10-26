@@ -1,6 +1,6 @@
 # vim: tabstop=4 shiftwidth=4 softtabstop=4
 #
-# Copyright 2013 Hewlett Packard Development Company, L.P.
+# (c) Copyright 2013-2015 Hewlett Packard Enterprise Development LP
 # All Rights Reserved.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -16,7 +16,7 @@
 #    under the License.
 
 """
-HPLeftHand HTTP Client
+HPELeftHand HTTP Client
 
 .. module: http
 
@@ -35,7 +35,7 @@ try:
 except ImportError:
     import simplejson as json
 
-from hplefthandclient import exceptions
+from hpelefthandclient import exceptions
 
 
 class HTTPJSONRESTClient(object):
@@ -53,10 +53,10 @@ class HTTPJSONRESTClient(object):
 
     """
 
-    USER_AGENT = 'python-hplefthandclient'
+    USER_AGENT = 'python-hpelefthandclient'
     SESSION_COOKIE_NAME = 'Authorization'
     #API_VERSION = 'X-API-Version'
-    #CHRP_VERSION = 'X_HP-CHRP-Client-Version'
+    #CHRP_VERSION = 'X_HPE-CHRP-Client-Version'
     http_log_debug = False
     _logger = logging.getLogger(__name__)
 

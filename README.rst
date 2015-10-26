@@ -1,9 +1,18 @@
-HP LeftHand/StoreVirtual REST Client
+HPE LeftHand/StoreVirtual REST Client
 ===================
-This is a Client library that can talk to the HP LeftHand/StoreVirtual Storage array.
-The HP LeftHand storage array has a REST web service interface.
+This is a Client library that can talk to the HPE LeftHand/StoreVirtual Storage array.
+The HPE LeftHand storage array has a REST web service interface.
 This client library implements a simple interface to talk with that REST
 interface using the python Requests http library.
+
+This is the new location for the rebranded HP LeftHand/StoreVirtual REST Client and
+will be where all future releases are made. It was previously located on PyPi at:
+https://pypi.python.org/pypi/hplefthandclient
+
+The GitHub repository for the old HP LeftHand/StoreVirtual REST Client is located at:
+https://github.com/hpe-storage/python-lefthandclient/tree/1.x
+
+The HP LeftHand/StoreVirtual REST Client (hplefthandclient) is now considered deprecated.
 
 Requirements
 ============
@@ -62,7 +71,7 @@ Folders
 =======
 
 * docs -- contains the documentation.
-* hplefthandlient -- the actual client.py library
+* hpelefthandlient -- the actual client.py library
 * test -- unit tests
 * samples -- some sample uses
 
@@ -84,4 +93,4 @@ Running Simulators
 
 Manually run flask server (when config.ini unit=true)::
 
-  $ python test/HPLeftHandMockServer_flask.py -port 5001 -user <USERNAME> -password <PASSWORD> -debug
+  $ python test/HPELeftHandMockServer_flask.py -port 5001 -user <USERNAME> -password <PASSWORD> -debug

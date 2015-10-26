@@ -1,4 +1,4 @@
-# (c) Copyright 2015 Hewlett Packard Development Company, L.P.
+# (c) Copyright 2015 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import inspect
 from testconfig import config
 import datetime
 
-from hplefthandclient import client
+from hpelefthandclient import client
 
 try:
     # For Python 3.0 and later
@@ -36,7 +36,7 @@ except ImportError:
 TIME = datetime.datetime.now().strftime('%H%M%S')
 
 
-class HPLeftHandClientBaseTestCase(unittest.TestCase):
+class HPELeftHandClientBaseTestCase(unittest.TestCase):
 
     cluster_id = 0
     GB_TO_BYTES = 1073741824    # Gibibytes to bytes
@@ -59,13 +59,13 @@ class HPLeftHandClientBaseTestCase(unittest.TestCase):
 
         if self.unitTest:
             self.printHeader('Using flask ' + self.flask_url)
-            self.cl = client.HPLeftHandClient(self.flask_url)
+            self.cl = client.HPELeftHandClient(self.flask_url)
             parsed_url = urlparse(self.flask_url)
             userArg = '-user=%s' % self.user
             passwordArg = '-password=%s' % self.password
             portArg = '-port=%s' % parsed_url.port
 
-            script = 'HPLeftHandMockServer_flask.py'
+            script = 'HPELeftHandMockServer_flask.py'
             path = "%s/%s" % (cwd, script)
             try:
                 if self.startFlask:
@@ -84,7 +84,7 @@ class HPLeftHandClientBaseTestCase(unittest.TestCase):
             time.sleep(1)
         else:
             self.printHeader('Using LeftHand ' + self.url_lhos)
-            self.cl = client.HPLeftHandClient(self.url_lhos)
+            self.cl = client.HPELeftHandClient(self.url_lhos)
 
         if self.debug:
             self.cl.debug_rest(True)

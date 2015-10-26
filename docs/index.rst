@@ -1,14 +1,16 @@
-HPLeftHandClient |release| Documentation
-========================================
+HPELeftHandClient |release| Documentation
+=========================================
 
 Overview
 --------
-**HPLeftHandClient** is a Python package containing a class that uses 
-HTTP REST calls to talk with an HP LeftHand/StoreVirtual drive array.
+**HPELeftHandClient** is a Python package containing a class that uses
+HTTP REST calls to talk with an HPE LeftHand/StoreVirtual drive array.
 The distribution containing tools for working with
-`LeftHand/StoreVirtual Storage Arrays <http://www.hp.com/go/storevirtual>`_. 
+`LeftHand/StoreVirtual Storage Arrays <http://www.hp.com/go/storevirtual>`_.
 This documentation attempts to explain
-everything you need to know to use **HPLeftHandClient**.
+everything you need to know to use **HPELeftHandClient**.
+
+The **HPELeftHandClient** is a rebranding of the **HPLeftHandClient**.
 
 :doc:`installation`
   Instructions on how to get the distribution.
@@ -26,12 +28,12 @@ Issues
 
 All issues should be reported (and can be tracked / voted for /
 commented on) at the main `github issues
-<https://github.com/hp-storage/python-lefthandclient/issues>`_, in the "LeftHand Python Driver"
+<https://github.com/hpe-storage/python-lefthandclient/issues>`_, in the "LeftHand Python Driver"
 project.
 
 Changes
 -------
-See the :doc:`changelog` for a full list of changes to HPLeftHandClient.
+See the :doc:`changelog` for a full list of changes to HPELeftHandClient.
 
 
 About This Documentation
@@ -39,8 +41,8 @@ About This Documentation
 This documentation is generated using the `Sphinx
 <http://sphinx.pocoo.org/>`_ documentation generator. The source files
 for the documentation are located in the *doc/* directory of the
-**HPLeftHandClient** distribution. To generate the docs locally run the
-following command from the root directory of the **HPLeftHandClient** 
+**HPELeftHandClient** distribution. To generate the docs locally run the
+following command from the root directory of the **HPELeftHandClient**
 
 .. code-block:: bash
 

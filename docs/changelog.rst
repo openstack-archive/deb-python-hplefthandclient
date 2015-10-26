@@ -80,3 +80,10 @@ Changes in Version 1.1.0
 * SSL certificate verification can be enabled by passing secure=True
 * SSL certificate verification can be done against a self provided .crt file
   with secure='/path/to/ca-certificates.crt'
+
+Changes in Version 2.0.0
+------------------------
+
+* Rebranded the HPLeftHandClient to HPELeftHandClient.
+* Updating the documentation to use the new PyPi project name for the
+  client, 'python-lefthandclient'.
