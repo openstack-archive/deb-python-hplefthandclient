@@ -41,6 +41,9 @@ Doing so is easy:
   # cl = client.HPELeftHandClient("https://10.10.10.10:8081/lhos",
   #                                secure='/etc/ssl/certs/ca-certificates.crt')
 
+  # Set the SSH authentication options for the SSH based calls.
+  cl.setSSHOptions(ip_address, username, password)
+
   try:
       cl.login(username, password)
       print "Login worked!"

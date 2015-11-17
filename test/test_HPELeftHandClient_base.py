@@ -52,7 +52,30 @@ class HPELeftHandClientBaseTestCase(unittest.TestCase):
     unitTest = config['TEST']['unit'].lower() == 'true'
     startFlask = config['TEST']['start_flask_server'].lower() == 'true'
 
-    def setUp(self):
+    ssh_port = None
+    if 'ssh_port' in config['TEST']:
+        ssh_port = int(config['TEST']['ssh_port'])
+    elif unitTest:
+        ssh_port = 2200
+    else:
+        ssh_port = 16022
+
+    # Don't setup SSH unless needed.  It slows things down.
+    withSSH = False
+
+    if 'known_hosts_file' in config['TEST']:
+        known_hosts_file = config['TEST']['known_hosts_file']
+    else:
+        known_hosts_file = None
+
+    if 'missing_key_policy' in config['TEST']:
+        missing_key_policy = config['TEST']['missing_key_policy']
+    else:
+        missing_key_policy = None
+
+    def setUp(self, withSSH=False):
+
+        self.withSSH = withSSH
 
         cwd = os.path.dirname(os.path.abspath(
                               inspect.getfile(inspect.currentframe())))
@@ -82,9 +105,49 @@ class HPELeftHandClientBaseTestCase(unittest.TestCase):
             except Exception:
                 pass
             time.sleep(1)
+
+            if self.withSSH:
+                self.printHeader('Using paramiko SSH server on port %s' %
+                                 self.ssh_port)
+
+                ssh_script = 'HPELeftHandMockServer_ssh.py'
+                ssh_path = "%s/%s" % (cwd, ssh_script)
+
+                self.mockSshServer = subprocess.Popen([sys.executable,
+                                                       ssh_path,
+                                                       str(self.ssh_port)],
+                                                      stdout=subprocess.PIPE,
+                                                      stderr=subprocess.PIPE,
+                                                      stdin=subprocess.PIPE)
+                time.sleep(1)
         else:
             self.printHeader('Using LeftHand ' + self.url_lhos)
             self.cl = client.HPELeftHandClient(self.url_lhos)
+
+        if self.withSSH:
+            # This seems to slow down the test cases, so only use this when
+            # requested
+            if self.unitTest:
+                # The mock SSH server can be accessed at 0.0.0.0.
+                ip = '0.0.0.0'
+            else:
+                parsed_lh_url = urlparse(self.url_lhos)
+                ip = parsed_lh_url.hostname.split(':').pop()
+            try:
+                # Now that we don't do keep-alive, the conn_timeout needs to
+                # be set high enough to avoid sometimes slow response in
+                # the File Persona tests.
+                self.cl.setSSHOptions(
+                    ip,
+                    self.user,
+                    self.password,
+                    port=self.ssh_port,
+                    conn_timeout=500,
+                    known_hosts_file=self.known_hosts_file,
+                    missing_key_policy=self.missing_key_policy)
+            except Exception as ex:
+                print(ex)
+                self.fail("failed to start ssh client")
 
         if self.debug:
             self.cl.debug_rest(True)
@@ -97,6 +160,8 @@ class HPELeftHandClientBaseTestCase(unittest.TestCase):
             #TODO: it seems to kill all the process except the last one...
             #don't know why
             self.mockServer.kill()
+            if self.withSSH:
+                self.mockSshServer.kill()
 
     def printHeader(self, name):
         print("\n##Start testing '%s'" % name)

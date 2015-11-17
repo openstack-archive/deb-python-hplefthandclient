@@ -95,3 +95,4 @@ Changes in Version 2.0.1
 * Changes the exception isinstance check to look for basestring/str instead of
   bytes in order to properly store the error description.
 * Adds a new API for modifying snapshots.
+* Adds SSH support

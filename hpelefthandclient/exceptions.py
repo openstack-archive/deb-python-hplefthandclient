@@ -21,8 +21,12 @@ Exceptions for the client
 
 :Author: Walter A. Boring IV
 :Description: This contains the HTTP exceptions that can come back from
-the REST calls
+the REST/SSH calls
 """
+
+import logging
+
+LOG = logging.getLogger(__name__)
 
 # Python 3+ override
 try:
@@ -413,3 +417,39 @@ def from_response(response, body):
     """
     cls = _code_map.get(response.status, ClientException)
     return cls(body)
+
+
+class SSHException(Exception):
+    """This is the basis for the SSH Exceptions."""
+
+    code = 500
+    message = "An unknown exception occurred."
+
+    def __init__(self, message=None, **kwargs):
+        self.kwargs = kwargs
+
+        if 'code' not in self.kwargs:
+            try:
+                self.kwargs['code'] = self.code
+            except AttributeError:
+                pass
+
+        if not message:
+            try:
+                message = self.message % kwargs
+
+            except Exception:
+                # kwargs doesn't match a variable in the message
+                # log the issue and the kwargs
+                LOG.exception('Exception in string format operation')
+                for name, value in list(kwargs.items()):
+                    LOG.error("%s: %s" % (name, value))
+                # at least get the core message out if something happened
+                message = self.message
+
+        self.msg = message
+        super(SSHException, self).__init__(message)
+
+
+class SSHInjectionThreat(SSHException):
+    message = "SSH command injection detected: %(command)s"

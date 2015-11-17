@@ -22,7 +22,8 @@ HPELeftHand REST Client
 
 :Author: Kurt Martin
 :Description: This is the LeftHand/StoreVirtual Client that talks to the
-LeftHand OS REST Service.
+LeftHand OS REST Service. This version also supports running actions on the
+LeftHand that use SSH.
 
 This client requires and works with version 11.5 of the LeftHand firmware
 
@@ -35,7 +36,7 @@ except ImportError:
     # Fall back to Python 2's urllib2
     from urllib2 import quote
 
-from hpelefthandclient import exceptions, http
+from hpelefthandclient import exceptions, http, ssh
 
 
 class HPELeftHandClient(object):
@@ -47,8 +48,46 @@ class HPELeftHandClient(object):
         self.api_url = api_url
         self.http = http.HTTPJSONRESTClient(self.api_url, secure=secure)
         self.api_version = None
+        self.ssh = None
 
         self.debug_rest(debug)
+
+    def setSSHOptions(self, ip, login, password, port=16022,
+                      conn_timeout=None, privatekey=None,
+                      **kwargs):
+        """Set SSH Options for ssh calls.
+
+        This is used to set the SSH credentials for calls
+        that use SSH instead of REST HTTP.
+
+        :param ip: The IP address of the LeftHand array
+        :type ip: str
+        :param login: Username to log into SSH
+        :type login: str
+        :param password: Password to log into SSH
+        :type password: str
+        :param port: Port the SSH service is running on. The default port
+                     is 16022
+        :type port: int
+        :param conn_timeout: The connection timeout in seconds. Default is no
+                             connection timeout.
+        :type conn_timeout: int
+        :param privatekey: File location of SSH private key. Default does not
+                           use a private key.
+        :type privatekey: int
+
+        """
+        self.ssh = ssh.HPELeftHandSSHClient(ip, login, password, port,
+                                            conn_timeout, privatekey,
+                                            **kwargs)
+
+    def _run(self, cmd):
+        if self.ssh is None:
+            raise exceptions.SSHException('SSH is not initialized. Initialize'
+                                          ' it by calling "setSSHOptions".')
+        else:
+            self.ssh.open()
+            return self.ssh.run(cmd)
 
     def debug_rest(self, flag):
         """
@@ -59,6 +98,8 @@ class HPELeftHandClient(object):
 
         """
         self.http.set_debug_flag(flag)
+        if self.ssh:
+            self.ssh.set_debug_flag(flag)
 
     def login(self, username, password):
         """
@@ -98,6 +139,8 @@ class HPELeftHandClient(object):
 
         """
         self.http.unauthenticate()
+        if self.ssh:
+            self.ssh.close()
 
     def getApiVersion(self):
         """

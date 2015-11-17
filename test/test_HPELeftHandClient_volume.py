@@ -14,6 +14,8 @@
 
 """Test class of LeftHand Client handling volumes & snapshots """
 
+from testconfig import config
+
 import test_HPELeftHandClient_base
 
 from hpelefthandclient import exceptions
@@ -25,6 +27,10 @@ SNAP_NAME1 = 'SNAP_UNIT_TEST1_' + test_HPELeftHandClient_base.TIME
 SNAP_NAME2 = 'SNAP_UNIT_TEST2_' + test_HPELeftHandClient_base.TIME
 
 
+def is_live_test():
+    return config['TEST']['unit'].lower() == 'false'
+
+
 class HPELeftHandClientVolumeTestCase(test_HPELeftHandClient_base.
                                       HPELeftHandClientBaseTestCase):
 
@@ -32,7 +38,10 @@ class HPELeftHandClientVolumeTestCase(test_HPELeftHandClient_base.
     MIN_CG_API_VERSION = '1.2'
 
     def setUp(self):
-        super(HPELeftHandClientVolumeTestCase, self).setUp()
+        ssh = False
+        if is_live_test():
+            ssh = True
+        super(HPELeftHandClientVolumeTestCase, self).setUp(withSSH=ssh)
 
         try:
             cluster_info = self.cl.getClusterByName(

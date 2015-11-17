@@ -2,7 +2,7 @@ nose
 nose-testconfig
 flask
 Werkzeug
-
+mock
 flake8 # Used by tox
 coverage
 sphinx
