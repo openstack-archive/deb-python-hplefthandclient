@@ -44,9 +44,12 @@ class HPELeftHandClient(object):
     # Minimum API version needed for consistency group support
     MIN_CG_API_VERSION = '1.2'
 
-    def __init__(self, api_url, debug=False, secure=False):
+    def __init__(self, api_url, debug=False, secure=False,
+                 suppress_ssl_warnings=False, timeout=None):
         self.api_url = api_url
-        self.http = http.HTTPJSONRESTClient(self.api_url, secure=secure)
+        self.http = http.HTTPJSONRESTClient(
+            self.api_url, secure=secure,
+            suppress_ssl_warnings=suppress_ssl_warnings, timeout=timeout)
         self.api_version = None
         self.ssh = None
 
@@ -697,6 +700,184 @@ class HPELeftHandClient(object):
         response, body = self.http.post('/volumes/%s' % volume_id,
                                         body=info)
         return body
+
+    # Remote Copy related SSH commands
+    def makeVolumeRemote(self, name, snapshot_name):
+        """
+        Make a volume remote. This command is issued against a secondary
+        cluster and tells a volume it is associated to a primary volume
+        on another system,
+
+        :param name: Name of the volume
+        :type name: str
+        :param snapshot_name: Name of the remote snapshot that will be auto
+                              created.
+        :type snapshot_name: str
+
+        """
+        cmd = ['makeRemote',
+               'volumeName=' + name,
+               'snapshotName=' + snapshot_name]
+        output = self._run(cmd)
+        return self.ssh.was_command_successful(output)
+
+    def makeVolumePrimary(self, name):
+        """
+        Make a remote volume a priamry volume. This command is issued against
+        a secondary array to make a volume primary again. After a failover,
+        this is needed to attach the volume.
+
+        :param name: Name of the volume
+        :type name: str
+        """
+        cmd = ['makePrimary',
+               'volumeName=' + name]
+        output = self._run(cmd)
+        return self.ssh.was_command_successful(output)
+
+    def createRemoteSnapshotSchedule(self, name, schedule_name, recur_period,
+                                     start_time, retention_count,
+                                     remote_cluster, remote_retention_count,
+                                     remote_volume_name, remote_ip,
+                                     remote_user_name, remote_password):
+        """
+        Creates a remote snapshot schedule. This command is run on the primary
+        system and effectively creates asynchronous periodic replication
+        between two arrays.
+
+        :param name: Name of primary volume
+        :type name: str
+        :param schedule_name: Name of the schedule
+        :type schedule_name: str
+        :param recur_period: How often the remote snapshot will take place.
+                             Minimum of 1800 seconds (30 mins).
+        :type recur_period: int
+        :param start_time: ISO 8601, UTC formatted date string like:
+                           YYYY-MM-DDTHH:MM:SSZ
+        :type start_time: str
+        :param retention_count: The number of snapshots to maintain.
+                                Must be between 1 and 50.
+        :type retention_count: int
+        :param remote_cluster: The name of the remote cluster to host the
+                               remote volume.
+        :type remote_cluster: str
+        :param remote_retention_count: The number of remote snapshots to
+                                       maintain. Must be between 1 and 50.
+        :type remote_retention_count: int
+        :param remote_volume_name: The name of the remote volume to host
+                                   the snapshot.
+        :type remote_volume_name: str
+        :param remote_ip: The IP address of the remote group. NOTE: This
+                          CANNOT be the VIP. It must be an IP of a node
+                          within the cluster.
+        :type remote_ip: str
+        :param remote_user_name: The authentication user name for the remote
+                                 group.
+        :type remote_user_name: str
+        :param remote_password: The password for the remote group.
+        :type remote_password: str
+
+        """
+        cmd = ['createSnapshotSchedule',
+               'volumename=' + name,
+               'schedulename=' + schedule_name,
+               'recurperiod=' + str(recur_period),
+               'starttime=' + start_time,
+               'retentioncount=' + str(retention_count),
+               'remotecluster=' + remote_cluster,
+               'remoteretentioncount=' + str(remote_retention_count),
+               'remotevolume=' + remote_volume_name,
+               'remoteip=' + remote_ip,
+               'remoteusername=' + remote_user_name,
+               'remotepassword=' + remote_password]
+        output = self._run(cmd)
+        return self.ssh.was_command_successful(output)
+
+    def deleteRemoteSnapshotSchedule(self, name):
+        """
+        Deletes and existing remote snapshot schedule.
+
+        :param name: Name of the remote snapshot schedule.
+        :type name: str
+
+        """
+        cmd = ['deleteSnapshotSchedule',
+               'scheduleName=' + name]
+        output = self._run(cmd)
+        return self.ssh.was_command_successful(output)
+
+    def getRemoteSnapshotSchedule(self, name):
+        """
+        Retrieves remote snapshot schedule information
+
+        :param name: Name of the remote snapshot schedule.
+        :type name: str
+
+        :returns: Command output with the remote snapshot schedule
+                  information.
+        """
+        cmd = ['getSnapshotScheduleInfo',
+               'scheduleName=' + name]
+        schedule = self._run(cmd)
+        return schedule
+
+    def stopRemoteSnapshotSchedule(self, name):
+        """
+        Stops a remote snapshot schedule
+
+        :param name: Name of the remote snapshot schedule.
+        :type name: str
+        """
+        cmd = ['modifySnapshotSchedule',
+               'scheduleName=' + name,
+               'paused=1']
+        output = self._run(cmd)
+        return self.ssh.was_command_successful(output)
+
+    def startRemoteSnapshotSchedule(self, name):
+        """
+        Starts a remote snapshot schedule
+
+        :param name: Name of the remote snapshot schedule.
+        :type name: str
+        """
+        cmd = ['modifySnapshotSchedule',
+               'scheduleName=' + name,
+               'paused=0']
+        output = self._run(cmd)
+        return self.ssh.was_command_successful(output)
+
+    def doesRemoteSnapshotScheduleExist(self, name):
+        """
+        Determines if a remote snapshot schedule exists.
+
+        :param name: Name of the remote snapshot schedule.
+        :type name: str
+
+        :returns: Whether or not a remote snapshot schedule exists.
+        """
+        output = self.getRemoteSnapshotSchedule(name)
+        return self.ssh.was_command_successful(output)
+
+    def getIPFromCluster(self, cluster_name):
+        """
+        Given a cluster name, this will return the first IP address in the
+        cluster. The main use case for this is to create remote snapshot
+        schedules, considering the VIP cannot be provided; an individual
+        node IP is required.
+
+        :param cluster_name: The cluster name
+        :type cluster_name: str
+
+        :returns: IP address of a node in the cluster
+
+        """
+        target_ip = None
+        cluster = self.getClusterByName(cluster_name)
+        if cluster:
+            target_ip = cluster['storageModuleIPAddresses'][0]
+
+        return target_ip
 
     def _mergeDict(self, dict1, dict2):
         """

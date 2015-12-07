@@ -52,6 +52,14 @@ class HPELeftHandClientBaseTestCase(unittest.TestCase):
     unitTest = config['TEST']['unit'].lower() == 'true'
     startFlask = config['TEST']['start_flask_server'].lower() == 'true'
 
+    remote_copy = config['TEST']['run_remote_copy'].lower() == 'true'
+    run_remote_copy = remote_copy and not unitTest
+    if run_remote_copy:
+        secondary_user = config['TEST_REMOTE_COPY']['user']
+        secondary_password = config['TEST_REMOTE_COPY']['pass']
+        secondary_url_lhos = config['TEST_REMOTE_COPY']['lhos_url']
+        secondary_cluster = config['TEST_REMOTE_COPY']['cluster']
+
     ssh_port = None
     if 'ssh_port' in config['TEST']:
         ssh_port = int(config['TEST']['ssh_port'])
@@ -149,6 +157,27 @@ class HPELeftHandClientBaseTestCase(unittest.TestCase):
                 print(ex)
                 self.fail("failed to start ssh client")
 
+        # Setup remote copy target
+        if self.run_remote_copy:
+            parsed_lh_url = urlparse(self.secondary_url_lhos)
+            ip = parsed_lh_url.hostname.split(':').pop()
+            self.secondary_cl = client.HPELeftHandClient(
+                self.secondary_url_lhos)
+            try:
+                self.secondary_cl.setSSHOptions(
+                    ip,
+                    self.secondary_user,
+                    self.secondary_password,
+                    port=self.ssh_port,
+                    conn_timeout=500,
+                    known_hosts_file=self.known_hosts_file,
+                    missing_key_policy=self.missing_key_policy)
+            except Exception as ex:
+                print(ex)
+                self.fail("failed to start ssh client")
+            self.secondary_cl.login(self.secondary_user,
+                                    self.secondary_password)
+
         if self.debug:
             self.cl.debug_rest(True)
 
@@ -156,6 +185,8 @@ class HPELeftHandClientBaseTestCase(unittest.TestCase):
 
     def tearDown(self):
         self.cl.logout()
+        if self.run_remote_copy:
+            self.secondary_cl.logout()
         if self.unitTest and self.startFlask:
             #TODO: it seems to kill all the process except the last one...
             #don't know why

@@ -14,6 +14,8 @@
 
 """Test class of LeftHand Client handling volumes & snapshots """
 
+import time
+import unittest
 from testconfig import config
 
 import test_HPELeftHandClient_base
@@ -25,10 +27,31 @@ VOLUME_NAME2 = 'VOLUME2_UNIT_TEST_' + test_HPELeftHandClient_base.TIME
 VOLUME_NAME3 = 'VOLUME3_UNIT_TEST_' + test_HPELeftHandClient_base.TIME
 SNAP_NAME1 = 'SNAP_UNIT_TEST1_' + test_HPELeftHandClient_base.TIME
 SNAP_NAME2 = 'SNAP_UNIT_TEST2_' + test_HPELeftHandClient_base.TIME
+SKIP_FLASK_RCOPY_MESSAGE = ("Remote copy is not configured to be tested "
+                            "on live arrays.")
+REMOTE_SNAP_SCHED_NAME = 'VOLUME1_SCHED' + test_HPELeftHandClient_base.TIME
+REMOTE_SNAP_RECUR_PERIOD = '1800'
+REMOTE_SNAP_START_TIME = '1970-01-01T00:00:00Z'
+REMOTE_SNAP_RETENTION_COUNT = '10'
+REMOTE_SNAP_REMOTE_RETENTION_COUNT = '10'
 
 
 def is_live_test():
     return config['TEST']['unit'].lower() == 'false'
+
+
+# NOTE(aorourke): Remote copy related tests will be skipped if:
+#    1). They are being run against the flask server -or-
+#    2). run_remote_copy is set to false in config.ini, which it is by default
+# If you are making any changes that may touch anything remote copy related,
+# config.ini needs to be properly modified in order to run these tests
+# against live arrays. The results must be verified to ensure they are still
+# passing as expected.
+def no_remote_copy():
+    unit_test = config['TEST']['unit'].lower() == 'false'
+    remote_copy = config['TEST']['run_remote_copy'].lower() == 'true'
+    run_remote_copy = not remote_copy or not unit_test
+    return run_remote_copy
 
 
 class HPELeftHandClientVolumeTestCase(test_HPELeftHandClient_base.
@@ -49,11 +72,33 @@ class HPELeftHandClientVolumeTestCase(test_HPELeftHandClient_base.
                 HPELeftHandClientBaseTestCase.cluster)
             self.cluster_id = cluster_info['id']
             self.cluster_name = cluster_info['name']
+            self.ip_addresses = cluster_info['storageModuleIPAddresses']
+        except Exception:
+            self.cluster_id = 21
+            self.cluster_name = 'ClusterVSA309'
+            self.ip_addresses = ['10.10.30.165']
+            pass
+
+        try:
+            # Get secondary cluster information if needed.
+            if self.secondary_cl:
+                sec_cluster_info = self.secondary_cl.getClusterByName(
+                    test_HPELeftHandClient_base.
+                    HPELeftHandClientBaseTestCase.secondary_cluster)
+                self.sec_cluster_id = sec_cluster_info['id']
+                self.sec_cluster_name = sec_cluster_info['name']
+                self.sec_ip_addresses = (
+                    sec_cluster_info['storageModuleIPAddresses'])
         except Exception:
             pass
 
     def tearDown(self):
 
+        try:
+            self.deleteRemoteSnapshotSchedule(
+                REMOTE_SNAP_SCHED_NAME + "_Pri")
+        except Exception:
+            pass
         try:
             volume_info = self.cl.getVolumeByName(VOLUME_NAME1)
             self.cl.deleteVolume(volume_info['id'])
@@ -67,6 +112,16 @@ class HPELeftHandClientVolumeTestCase(test_HPELeftHandClient_base.
         try:
             volume_info = self.cl.getVolumeByName(VOLUME_NAME3)
             self.cl.deleteVolume(volume_info['id'])
+        except Exception:
+            pass
+        try:
+            self.secondary_cl.deleteRemoteSnapshotSchedule(
+                REMOTE_SNAP_SCHED_NAME + "_Rmt")
+        except Exception:
+            pass
+        try:
+            volume_info = self.secondary_cl.getVolumeByName(VOLUME_NAME1)
+            self.secondary_cl.deleteVolume(volume_info['id'])
         except Exception:
             pass
 
@@ -433,6 +488,311 @@ class HPELeftHandClientVolumeTestCase(test_HPELeftHandClient_base.
                           new_options)
 
         self.printFooter('modify_snapshot_nonExistSnapshot')
+
+    def test_7_get_ip_from_cluster(self):
+        self.printHeader('get_ip_from_cluster')
+
+        try:
+            expected_ip = self.ip_addresses[0]
+            target_ip = self.cl.getIPFromCluster(self.cluster_name)
+            self.assertEqual(expected_ip, target_ip)
+        except Exception as ex:
+            print(ex)
+            self.fail("Failed with unexpected exception")
+        self.printFooter('get_ip_from_cluster')
+
+    @unittest.skipIf(no_remote_copy(), SKIP_FLASK_RCOPY_MESSAGE)
+    def test_8_make_volume_remote(self):
+        self.printHeader('make_volume_remote')
+
+        try:
+            self.cl.createVolume(VOLUME_NAME1, self.cluster_id,
+                                 self.GB_TO_BYTES)
+            volume_info = self.cl.getVolumeByName(VOLUME_NAME1)
+            self.assertEqual(True, volume_info['isPrimary'])
+
+            self.cl.makeVolumeRemote(VOLUME_NAME1, SNAP_NAME1)
+            time.sleep(3)
+            volume_info = self.cl.getVolumeByName(VOLUME_NAME1)
+            self.assertEqual(False, volume_info['isPrimary'])
+
+            snap_info = self.cl.getSnapshotByName(SNAP_NAME1)
+            self.assertEqual(True, snap_info['isPrimary'])
+        except Exception as ex:
+            print(ex)
+            self.fail("Failed with unexpected exception")
+        self.printFooter('make_volume_remote')
+
+    @unittest.skipIf(no_remote_copy(), SKIP_FLASK_RCOPY_MESSAGE)
+    def test_8_make_volume_primary(self):
+        self.printHeader('make_volume_primary')
+
+        try:
+            self.cl.createVolume(VOLUME_NAME1, self.cluster_id,
+                                 self.GB_TO_BYTES)
+            volume_info = self.cl.getVolumeByName(VOLUME_NAME1)
+            self.assertEqual(True, volume_info['isPrimary'])
+
+            # Make volume remote
+            self.cl.makeVolumeRemote(VOLUME_NAME1, SNAP_NAME1)
+            time.sleep(3)
+            volume_info = self.cl.getVolumeByName(VOLUME_NAME1)
+            self.assertEqual(False, volume_info['isPrimary'])
+
+            # Make volume primary
+            self.cl.makeVolumePrimary(VOLUME_NAME1)
+            time.sleep(3)
+            volume_info = self.cl.getVolumeByName(VOLUME_NAME1)
+            self.assertEqual(True, volume_info['isPrimary'])
+        except Exception as ex:
+            print(ex)
+            self.fail("Failed with unexpected exception")
+        self.printFooter('make_volume_primary')
+
+    @unittest.skipIf(no_remote_copy(), SKIP_FLASK_RCOPY_MESSAGE)
+    def test_9_create_remote_snapshot_schedule(self):
+        self.printHeader('create_remote_snapshot_schedule')
+
+        try:
+            # Create primary volume
+            self.cl.createVolume(VOLUME_NAME1, self.cluster_id,
+                                 self.GB_TO_BYTES)
+
+            # Create secondary volume on target array
+            self.secondary_cl.createVolume(VOLUME_NAME1, self.sec_cluster_id,
+                                           self.GB_TO_BYTES)
+
+            # Make secondary volume a remote volume
+            self.secondary_cl.makeVolumeRemote(VOLUME_NAME1, SNAP_NAME1)
+
+            # Create the remote snapshot schedule
+            target_ip = self.secondary_cl.getIPFromCluster(
+                self.secondary_cluster)
+            success = self.cl.createRemoteSnapshotSchedule(
+                VOLUME_NAME1,
+                REMOTE_SNAP_SCHED_NAME,
+                REMOTE_SNAP_RECUR_PERIOD,
+                REMOTE_SNAP_START_TIME,
+                REMOTE_SNAP_RETENTION_COUNT,
+                self.secondary_cluster,
+                REMOTE_SNAP_REMOTE_RETENTION_COUNT,
+                VOLUME_NAME1,
+                target_ip,
+                self.secondary_user,
+                self.secondary_password)
+            self.assertEqual(True, success)
+
+            # Check to be sure the schedule exists
+            does_schedule_exist = self.cl.doesRemoteSnapshotScheduleExist(
+                REMOTE_SNAP_SCHED_NAME + "_Pri")
+            self.assertEqual(True, does_schedule_exist)
+            does_remote_schedule_exist = (
+                self.secondary_cl.doesRemoteSnapshotScheduleExist(
+                    REMOTE_SNAP_SCHED_NAME + "_Rmt"))
+            self.assertEqual(True, does_remote_schedule_exist)
+
+            # Get schedule and check values
+            schedule = self.cl.getRemoteSnapshotSchedule(
+                REMOTE_SNAP_SCHED_NAME + "_Pri")
+            schedule_string = ''.join(schedule)
+            self.assertRegexpMatches(
+                schedule_string, ".*volumeName\s+" + VOLUME_NAME1)
+            self.assertRegexpMatches(
+                schedule_string, ".*name\s+" + REMOTE_SNAP_SCHED_NAME)
+            self.assertRegexpMatches(
+                schedule_string, ".*period\s+" + REMOTE_SNAP_RECUR_PERIOD)
+            self.assertRegexpMatches(
+                schedule_string, ".*startTime\s+" + REMOTE_SNAP_START_TIME)
+            self.assertRegexpMatches(
+                schedule_string, ".*retentionCount\s+10")
+        except Exception as ex:
+            print(ex)
+            self.fail("Failed with unexpected exception")
+        self.printFooter('create_remote_snapshot_schedule')
+
+    @unittest.skipIf(no_remote_copy(), SKIP_FLASK_RCOPY_MESSAGE)
+    def test_9_delete_remote_snapshot_schedule(self):
+        self.printHeader('delete_remote_snapshot_schedule')
+
+        try:
+            # Create primary volume
+            self.cl.createVolume(VOLUME_NAME1, self.cluster_id,
+                                 self.GB_TO_BYTES)
+
+            # Create secondary volume on target array
+            self.secondary_cl.createVolume(VOLUME_NAME1, self.sec_cluster_id,
+                                           self.GB_TO_BYTES)
+
+            # Make secondary volume a remote volume
+            self.secondary_cl.makeVolumeRemote(VOLUME_NAME1, SNAP_NAME1)
+
+            # Create the remote snapshot schedule
+            target_ip = self.secondary_cl.getIPFromCluster(
+                self.secondary_cluster)
+            success = self.cl.createRemoteSnapshotSchedule(
+                VOLUME_NAME1,
+                REMOTE_SNAP_SCHED_NAME,
+                REMOTE_SNAP_RECUR_PERIOD,
+                REMOTE_SNAP_START_TIME,
+                REMOTE_SNAP_RETENTION_COUNT,
+                self.secondary_cluster,
+                REMOTE_SNAP_REMOTE_RETENTION_COUNT,
+                VOLUME_NAME1,
+                target_ip,
+                self.secondary_user,
+                self.secondary_password)
+            self.assertEqual(True, success)
+
+            # Check to be sure the schedule exists
+            does_schedule_exist = self.cl.doesRemoteSnapshotScheduleExist(
+                REMOTE_SNAP_SCHED_NAME + "_Pri")
+            self.assertEqual(True, does_schedule_exist)
+            does_remote_schedule_exist = (
+                self.secondary_cl.doesRemoteSnapshotScheduleExist(
+                    REMOTE_SNAP_SCHED_NAME + "_Rmt"))
+            self.assertEqual(True, does_remote_schedule_exist)
+
+            # Delete the remote snapshot schedule
+            success = self.cl.deleteRemoteSnapshotSchedule(
+                REMOTE_SNAP_SCHED_NAME + "_Pri")
+            self.assertEqual(True, success)
+
+            # Check to be sure the schedule no longer exists
+            self.assertRaises(
+                exceptions.SSHException,
+                self.cl.doesRemoteSnapshotScheduleExist,
+                REMOTE_SNAP_SCHED_NAME + "_Pri")
+        except Exception as ex:
+            print(ex)
+            self.fail("Failed with unexpected exception")
+        self.printFooter('delete_remote_snapshot_schedule')
+
+    @unittest.skipIf(no_remote_copy(), SKIP_FLASK_RCOPY_MESSAGE)
+    def test_10_stop_remote_snapshot_schedule(self):
+        self.printHeader('stop_remote_snapshot_schedule')
+
+        try:
+            # Create primary volume
+            self.cl.createVolume(VOLUME_NAME1, self.cluster_id,
+                                 self.GB_TO_BYTES)
+
+            # Create secondary volume on target array
+            self.secondary_cl.createVolume(VOLUME_NAME1, self.sec_cluster_id,
+                                           self.GB_TO_BYTES)
+
+            # Make secondary volume a remote volume
+            self.secondary_cl.makeVolumeRemote(VOLUME_NAME1, SNAP_NAME1)
+
+            # Create the remote snapshot schedule
+            target_ip = self.secondary_cl.getIPFromCluster(
+                self.secondary_cluster)
+            success = self.cl.createRemoteSnapshotSchedule(
+                VOLUME_NAME1,
+                REMOTE_SNAP_SCHED_NAME,
+                REMOTE_SNAP_RECUR_PERIOD,
+                REMOTE_SNAP_START_TIME,
+                REMOTE_SNAP_RETENTION_COUNT,
+                self.secondary_cluster,
+                REMOTE_SNAP_REMOTE_RETENTION_COUNT,
+                VOLUME_NAME1,
+                target_ip,
+                self.secondary_user,
+                self.secondary_password)
+            self.assertEqual(True, success)
+
+            # Check to be sure the schedule exists
+            does_schedule_exist = self.cl.doesRemoteSnapshotScheduleExist(
+                REMOTE_SNAP_SCHED_NAME + "_Pri")
+            self.assertEqual(True, does_schedule_exist)
+            does_remote_schedule_exist = (
+                self.secondary_cl.doesRemoteSnapshotScheduleExist(
+                    REMOTE_SNAP_SCHED_NAME + "_Rmt"))
+            self.assertEqual(True, does_remote_schedule_exist)
+
+            # Stop the remote snapshot schedule. LH needs time to create and
+            # start the schedule.
+            time.sleep(5)
+            self.cl.stopRemoteSnapshotSchedule(REMOTE_SNAP_SCHED_NAME + "_Pri")
+
+            # Get schedule and check it has stopped
+            schedule = self.cl.getRemoteSnapshotSchedule(
+                REMOTE_SNAP_SCHED_NAME + "_Pri")
+            schedule_string = ''.join(schedule)
+            self.assertRegexpMatches(
+                schedule_string, ".*paused\s+true")
+        except Exception as ex:
+            print(ex)
+            self.fail("Failed with unexpected exception")
+        self.printFooter('stop_remote_snapshot_schedule')
+
+    @unittest.skipIf(no_remote_copy(), SKIP_FLASK_RCOPY_MESSAGE)
+    def test_10_start_remote_snapshot_schedule(self):
+        self.printHeader('start_remote_snapshot_schedule')
+
+        try:
+            # Create primary volume
+            self.cl.createVolume(VOLUME_NAME1, self.cluster_id,
+                                 self.GB_TO_BYTES)
+
+            # Create secondary volume on target array
+            self.secondary_cl.createVolume(VOLUME_NAME1, self.sec_cluster_id,
+                                           self.GB_TO_BYTES)
+
+            # Make secondary volume a remote volume
+            self.secondary_cl.makeVolumeRemote(VOLUME_NAME1, SNAP_NAME1)
+
+            # Create the remote snapshot schedule
+            target_ip = self.secondary_cl.getIPFromCluster(
+                self.secondary_cluster)
+            success = self.cl.createRemoteSnapshotSchedule(
+                VOLUME_NAME1,
+                REMOTE_SNAP_SCHED_NAME,
+                REMOTE_SNAP_RECUR_PERIOD,
+                REMOTE_SNAP_START_TIME,
+                REMOTE_SNAP_RETENTION_COUNT,
+                self.secondary_cluster,
+                REMOTE_SNAP_REMOTE_RETENTION_COUNT,
+                VOLUME_NAME1,
+                target_ip,
+                self.secondary_user,
+                self.secondary_password)
+            self.assertEqual(True, success)
+
+            # Check to be sure the schedule exists
+            does_schedule_exist = self.cl.doesRemoteSnapshotScheduleExist(
+                REMOTE_SNAP_SCHED_NAME + "_Pri")
+            self.assertEqual(True, does_schedule_exist)
+            does_remote_schedule_exist = (
+                self.secondary_cl.doesRemoteSnapshotScheduleExist(
+                    REMOTE_SNAP_SCHED_NAME + "_Rmt"))
+            self.assertEqual(True, does_remote_schedule_exist)
+
+            # Stop the remote snapshot schedule. LH needs time to create and
+            # start the schedule.
+            time.sleep(5)
+            self.cl.stopRemoteSnapshotSchedule(REMOTE_SNAP_SCHED_NAME + "_Pri")
+
+            # Get schedule and check it has stopped
+            schedule = self.cl.getRemoteSnapshotSchedule(
+                REMOTE_SNAP_SCHED_NAME + "_Pri")
+            schedule_string = ''.join(schedule)
+            self.assertRegexpMatches(
+                schedule_string, ".*paused\s+true")
+
+            # Start the remote snapshot schedule
+            self.cl.startRemoteSnapshotSchedule(
+                REMOTE_SNAP_SCHED_NAME + "_Pri")
+
+            # Get schedule and check it has started
+            schedule = self.cl.getRemoteSnapshotSchedule(
+                REMOTE_SNAP_SCHED_NAME + "_Pri")
+            schedule_string = ''.join(schedule)
+            self.assertRegexpMatches(
+                schedule_string, ".*paused\s+false")
+        except Exception as ex:
+            print(ex)
+            self.fail("Failed with unexpected exception")
+        self.printFooter('start_remote_snapshot_schedule')
 #testing
 #suite = unittest.TestLoader().loadTestsFromTestCase(
 #    HPELeftHandClientVolumeTestCase)

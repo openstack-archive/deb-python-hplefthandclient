@@ -96,3 +96,14 @@ Changes in Version 2.0.1
   bytes in order to properly store the error description.
 * Adds a new API for modifying snapshots.
 * Adds SSH support
+* Allows changing timeouts for requests
+* Adds remote copy support:
+    - makeVolumeRemote
+    - makeVolumePrimary
+    - createRemoteSnapshotSchedule
+    - deleteRemoteSnapshotSchedule
+    - getRemoteSnapshotSchedule
+    - stopRemoteSnapshotSchedule
+    - startRemoteSnapshotSchedule
+    - doesRemoteSnapshotScheduleExist
+    - getIPFromCluster

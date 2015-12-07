@@ -42,6 +42,13 @@ Capabilities
 * Delete Server
 * Add Server Access
 * Remove Server Access
+* Make Volume Remote
+* Make Volume Primary
+* Create Remote Snapshot Schedule
+* Delete Remote Snapshot Schedule
+* Query Remote Snapshot Schedule
+* Stop Remote Snapshot Schedule
+* Start Remote Snapshot Schedule
 
 
 Installation
@@ -62,6 +69,14 @@ To run all unit tests::
 To run a specific test::
 
  $ tox -e py27 -- test/file.py:class_name.test_method_name
+
+To run all unit tests with Python 3.4::
+
+ $ tox -e py34
+
+To run a specific test with Python 3.4::
+
+ $ tox -e py34 -- test/file.py:class_name.test_method_name
 
 To run all unit tests with code coverage::
 

@@ -64,7 +64,7 @@ class HTTPJSONRESTClient(object):
     _logger = logging.getLogger(__name__)
 
     def __init__(self, api_url, secure=False, http_log_debug=False,
-                 suppress_ssl_warnings=False):
+                 suppress_ssl_warnings=False, timeout=None):
         if suppress_ssl_warnings:
             requests.packages.urllib3.disable_warnings()
         self.session_key = None
@@ -75,6 +75,7 @@ class HTTPJSONRESTClient(object):
 
         self.times = []  # [("item", starttime, endtime), ...]
         self.secure = secure
+        self.timeout = timeout
 
     def set_url(self, api_url):
         #should be http://<Server:Port>/lhos
@@ -199,8 +200,15 @@ class HTTPJSONRESTClient(object):
 
         self._http_log_req(args, kwargs)
         try:
-            r = requests.request(http_method, http_url, data=payload,
-                                 headers=kwargs['headers'], verify=self.secure)
+            if self.timeout:
+                r = requests.request(http_method, http_url, data=payload,
+                                     headers=kwargs['headers'],
+                                     verify=self.secure,
+                                     timeout=self.timeout)
+            else:
+                r = requests.request(http_method, http_url, data=payload,
+                                     headers=kwargs['headers'],
+                                     verify=self.secure)
         except requests.exceptions.SSLError as err:
             HTTPJSONRESTClient._logger.error("SSL certificate verification"
                                              " failed: (%s). You must have a"

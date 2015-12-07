@@ -34,3 +34,12 @@
       .. automethod:: cloneVolume
       .. automethod:: addServerAccess
       .. automethod:: removeServerAccess
+      .. automethod:: makeVolumeRemote
+      .. automethod:: makeVolumePrimary
+      .. automethod:: createRemoteSnapshotSchedule
+      .. automethod:: deleteRemoteSnapshotSchedule
+      .. automethod:: getRemoteSnapshotSchedule
+      .. automethod:: stopRemoteSnapshotSchedule
+      .. automethod:: startRemoteSnapshotSchedule
+      .. automethod:: doesRemoteSnapshotScheduleExist
+      .. automethod:: getIPFromCluster
