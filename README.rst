@@ -32,6 +32,7 @@ Capabilities
 * Create Snapshot
 * Delete Snapshot
 * Clone Snapshot
+* Modify Snapshot
 * Get Cluster(s)
 * Get Cluster by Name
 * Get Server(s)

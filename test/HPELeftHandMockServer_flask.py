@@ -411,6 +411,20 @@ def delete_snapshots(snapshot_id):
                 "The snapshot id '%s' does not exists." % snapshot_id)
 
 
+@app.route('/lhos/snapshots/<snapshot_id>', methods=['PUT'])
+def modify_snapshot(snapshot_id):
+    debugRequest(request)
+    data = json.loads(request.data.decode('utf-8'))
+    for snapshot in snapshots['members']:
+        if snapshot['id'] == int(snapshot_id):
+            for key in data.keys():
+                snapshot[key] = data[key]
+            return make_response("", 200)
+
+    throw_error(500, 'SNAPSHOT_ID_NOT_FOUND',
+                "The snapshot id '%s' does not exists." % snapshot_id)
+
+
 @app.route('/lhos/snapshots/<snapshot_id>', methods=['POST'])
 def handle_snapshot_actions(snapshot_id):
     data = json.loads(request.data.decode('utf-8'))

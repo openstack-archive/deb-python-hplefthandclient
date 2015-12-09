@@ -21,7 +21,8 @@ from hpelefthandclient import exceptions
 VOLUME_NAME1 = 'VOLUME1_UNIT_TEST_' + test_HPELeftHandClient_base.TIME
 VOLUME_NAME2 = 'VOLUME2_UNIT_TEST_' + test_HPELeftHandClient_base.TIME
 VOLUME_NAME3 = 'VOLUME3_UNIT_TEST_' + test_HPELeftHandClient_base.TIME
-SNAP_NAME1 = 'SNAP_UNIT_TEST_' + test_HPELeftHandClient_base.TIME
+SNAP_NAME1 = 'SNAP_UNIT_TEST1_' + test_HPELeftHandClient_base.TIME
+SNAP_NAME2 = 'SNAP_UNIT_TEST2_' + test_HPELeftHandClient_base.TIME
 
 
 class HPELeftHandClientVolumeTestCase(test_HPELeftHandClient_base.
@@ -392,6 +393,37 @@ class HPELeftHandClientVolumeTestCase(test_HPELeftHandClient_base.
                           snap_set,
                           optional)
         self.printFooter('create_snapshot_set_nonExistVolume')
+
+    def test_6_modify_snapshot(self):
+        self.printHeader('modify_snapshot')
+        self.cl.createVolume(VOLUME_NAME1, self.cluster_id,
+                             self.GB_TO_BYTES)
+        volume_info = self.cl.getVolumeByName(VOLUME_NAME1)
+        option = {'inheritAccess': True}
+        self.cl.createSnapshot(SNAP_NAME2, volume_info['id'], option)
+
+        new_options = {'description': 'test snapshot'}
+        snap_info = self.cl.getSnapshotByName(SNAP_NAME2)
+        self.cl.modifySnapshot(snap_info['id'], new_options)
+        new_snap_info = self.cl.getSnapshotByName(SNAP_NAME2)
+        self.assertIn('description', new_snap_info)
+        self.assertEqual(new_options['description'],
+                         new_snap_info['description'])
+        self.cl.deleteSnapshot(snap_info['id'])
+
+        self.printFooter('modify_snapshot')
+
+    def test_6_modify_snapshot_nonExistSnapshot(self):
+        self.printHeader('modify_snapshot_nonExistSnapshot')
+
+        fake_snap_id = 12345
+        new_options = {'description': 'test snapshot'}
+        self.assertRaises(exceptions.HTTPServerError,
+                          self.cl.modifySnapshot,
+                          fake_snap_id,
+                          new_options)
+
+        self.printFooter('modify_snapshot_nonExistSnapshot')
 #testing
 #suite = unittest.TestLoader().loadTestsFromTestCase(
 #    HPELeftHandClientVolumeTestCase)

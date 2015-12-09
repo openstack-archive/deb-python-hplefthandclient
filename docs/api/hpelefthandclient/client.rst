@@ -23,6 +23,7 @@
       .. automethod:: createSnapshot
       .. automethod:: deleteSnapshot
       .. automethod:: cloneSnapshot
+      .. automethod:: modifySnapshot
       .. automethod:: getVolumes
       .. automethod:: getVolume
       .. automethod:: getVolumeByName

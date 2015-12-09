@@ -384,6 +384,22 @@ class HPELeftHandClient(object):
                                         body=info)
         return body
 
+    def modifySnapshot(self, snapshot_id, options):
+        """Modify an existing snapshot.
+
+        :param snapshot_id: The id of the snapshot to find
+        :type snapshot_id: str
+        :param options: Dictionary of snapshot options to be modified
+        :type options: dict
+
+        :returns: snapshot
+        :raises: :class:`~hpelefthandclient.exceptions.HTTPServerError`
+            - SNAPSHOT_ID_NOT_FOUND - snapshot doesn't exist
+        """
+        response, body = self.http.put('/snapshots/%s' % snapshot_id,
+                                       body=options)
+        return body
+
     def getVolumes(self, cluster=None, fields=None):
         """
         Get the list of Volumes
