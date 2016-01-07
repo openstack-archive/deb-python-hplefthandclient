@@ -107,3 +107,8 @@ Changes in Version 2.0.1
     - startRemoteSnapshotSchedule
     - doesRemoteSnapshotScheduleExist
     - getIPFromCluster
+
+Changes in Version 2.0.2
+------------------------
+
+* Adds a new API for getting a snapshot's parent volume name.

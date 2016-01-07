@@ -1,4 +1,4 @@
-# (c) Copyright 2015 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2015-2016 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -488,6 +488,38 @@ class HPELeftHandClientVolumeTestCase(test_HPELeftHandClient_base.
                           new_options)
 
         self.printFooter('modify_snapshot_nonExistSnapshot')
+
+    @unittest.skipIf(not is_live_test(), "Only runs on live array.")
+    def test_6_get_snapshot_parent_volume(self):
+        self.printHeader('get_snapshot_parent_volume')
+
+        self.cl.createVolume(VOLUME_NAME1, self.cluster_id,
+                             self.GB_TO_BYTES)
+        volume_info = self.cl.getVolumeByName(VOLUME_NAME1)
+        option = {'inheritAccess': True}
+        self.cl.createSnapshot(SNAP_NAME1, volume_info['id'], option)
+
+        parent_vol = self.cl.getSnapshotParentVolume(SNAP_NAME1)
+
+        self.assertEqual(VOLUME_NAME1, parent_vol['name'])
+
+        self.printFooter('get_snapshot_parent_volume')
+
+    @unittest.skipIf(not is_live_test(), "Only runs on live array.")
+    def test_6_get_snapshot_parent_volume_snapshot_invalid(self):
+        self.printHeader('get_snapshot_parent_volume_snapshot_invalid')
+
+        self.cl.createVolume(VOLUME_NAME1, self.cluster_id,
+                             self.GB_TO_BYTES)
+        volume_info = self.cl.getVolumeByName(VOLUME_NAME1)
+        option = {'inheritAccess': True}
+        self.cl.createSnapshot(SNAP_NAME1, volume_info['id'], option)
+
+        self.assertRaises(exceptions.HTTPNotFound,
+                          self.cl.getSnapshotParentVolume,
+                          "fake_snap")
+
+        self.printFooter('get_snapshot_parent_volume_snapshot_invalid')
 
     def test_7_get_ip_from_cluster(self):
         self.printHeader('get_ip_from_cluster')

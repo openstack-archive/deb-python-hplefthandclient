@@ -1,6 +1,6 @@
 # vim: tabstop=4 shiftwidth=4 softtabstop=4
 #
-# (c) Copyright 2013-2015 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2013-2016 Hewlett Packard Enterprise Development LP
 # All Rights Reserved.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -24,7 +24,7 @@ HPE LeftHand REST Client
 
 """
 
-version_tuple = (2, 0, 1)
+version_tuple = (2, 0, 2)
 
 
 def get_version_string():

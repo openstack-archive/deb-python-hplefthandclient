@@ -20,6 +20,7 @@
       .. automethod:: getSnapshots
       .. automethod:: getSnapshot
       .. automethod:: getSnapshotByName
+      .. automethod:: getSnapshotParentVolume
       .. automethod:: createSnapshot
       .. automethod:: deleteSnapshot
       .. automethod:: cloneSnapshot

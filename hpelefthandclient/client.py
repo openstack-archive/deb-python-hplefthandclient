@@ -1,6 +1,6 @@
 # vim: tabstop=4 shiftwidth=4 softtabstop=4
 #
-# (c) Copyright 2012-2015 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2012-2016 Hewlett Packard Enterprise Development LP
 # All Rights Reserved.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -28,6 +28,8 @@ LeftHand that use SSH.
 This client requires and works with version 11.5 of the LeftHand firmware
 
 """
+
+import re
 
 try:
     # For Python 3.0 and later
@@ -304,6 +306,44 @@ class HPELeftHandClient(object):
         """
         response, body = self.http.get('/snapshots?name=%s' % name)
         return body
+
+    def getSnapshotParentVolume(self, name):
+        """
+        Get the parent volume for a Snapshot
+
+        :param name: The name of the snapshot
+        :type name: str
+
+        :returns: parent volume
+        :raises: :class:`~hpelefthandclient.exceptions.HTTPNotFound`
+            - Snapshot not found.
+        :raises: :class:`~hpelefthandclient.exceptions.HTTPNotFound`
+            - NON_EXISTENT_VOL - volume doesn't exist
+        """
+        cmd = ['getSnapshotInfo',
+               'snapshotName=' + name]
+        output = self._run(cmd)
+        output = "\n".join(output)
+
+        # Extract the results from the command output.
+        # Use regex to find the result line and then make
+        # capture group #1 the value so it can be extracted.
+        # Do the same process to extract the description if
+        # an error occured.
+        m = re.search(r"result\s*(.*)", output)
+        result = m.group(1)
+        if int(result) != 0:
+            m = re.search(r"description\s*(.*)", output)
+            desc = m.group(1)
+            raise exceptions.HTTPNotFound(desc)
+
+        # Extract the parent volume name from the command output.
+        # Use regex to find only the volumeName line and then
+        # make capture group #1 the name so it can be extracted.
+        m = re.search(r"volumeName\s*(.*)", output)
+        parent_vol_name = m.group(1)
+
+        return self.getVolumeByName(parent_vol_name)
 
     def createSnapshot(self, name, source_volume_id, optional=None):
         """
