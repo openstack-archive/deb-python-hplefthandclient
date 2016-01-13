@@ -24,7 +24,7 @@ HPE LeftHand REST Client
 
 """
 
-version_tuple = (2, 0, 2)
+version_tuple = (2, 1, 0)
 
 
 def get_version_string():
