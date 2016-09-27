@@ -342,6 +342,16 @@ class HPELeftHandClientServerTestCase(test_HPELeftHandClient_base.
 
         self.printFooter('get_server_by_name')
 
+    def test_4_get_server_by_id(self):
+        self.printHeader('get_server_by_id')
+
+        self.cl.createServer(SERVER_NAME1, IQN1)
+        result = self.cl.getServers()
+        server_info = self.cl.getServer(result['members'][0]['id'])
+        self.assertEqual(result['members'][0]['id'], server_info['id'])
+
+        self.printFooter('get_server_by_id')
+
     def test_4_get_server_by_name_missing_server(self):
         self.printHeader('get_server_by_name_missing_server')
 

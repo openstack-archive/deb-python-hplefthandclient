@@ -193,7 +193,7 @@ def delete_server(server_id):
 
 
 @app.route('/lhos/servers', methods=['GET'])
-def get_server():
+def get_servers():
     debugRequest(request)
     server_name = None
     server_name = request.args.get('name')
@@ -208,6 +208,17 @@ def get_server():
         resp = make_response(json.dumps(servers), 200)
         return resp
 
+
+@app.route('/lhos/servers/<server_id>', methods=['GET'])
+def get_server(server_id):
+    debugRequest(request)
+    for server in servers['members']:
+        if server['id'] == int(server_id):
+            resp = make_response(json.dumps(server), 200)
+            return resp
+
+    throw_error(500, 'SERVER_ERROR',
+                "The server id '%s' does not exists." % server_id)
 
 # VOLUMES & SNAPSHOTS #
 
@@ -303,7 +314,7 @@ def handle_volume_actions(volume_id):
 
 
 @app.route('/lhos/volumes', methods=['GET'])
-def get_volume():
+def get_volumes():
     debugRequest(request)
     volume_name = None
     volume_name = request.args.get('name')
@@ -331,8 +342,34 @@ def get_volume():
         return resp
 
 
+@app.route('/lhos/volumes/<volume_id>', methods=['GET'])
+def get_volume(volume_id):
+    debugRequest(request)
+    for volume in volumes['members']:
+        if volume['id'] == int(volume_id):
+            resp = make_response(json.dumps(volume), 200)
+            return resp
+
+    throw_error(500, 'SERVER_ERROR',
+                "The volume id '%s' does not exists." % volume_id)
+
+
+@app.route('/lhos/volumes/<volume_id>', methods=['PUT'])
+def modify_volume(volume_id):
+    debugRequest(request)
+    data = json.loads(request.data.decode('utf-8'))
+    for volume in volumes['members']:
+        if volume['id'] == int(volume_id):
+            for key in data.keys():
+                volume[key] = data[key]
+            return make_response("", 200)
+
+    throw_error(500, 'SERVER_ERROR',
+                "The volume id '%s' does not exists." % volume_id)
+
+
 @app.route('/lhos/snapshots', methods=['GET'])
-def get_snapshot():
+def get_snapshots():
     debugRequest(request)
     snapshot_name = None
     snapshot_name = request.args.get('name')
@@ -348,6 +385,18 @@ def get_snapshot():
     else:
         resp = make_response(json.dumps(snapshots), 200)
         return resp
+
+
+@app.route('/lhos/snapshots/<snapshot_id>', methods=['GET'])
+def get_snapshot(snapshot_id):
+    debugRequest(request)
+    for snapshot in snapshots['members']:
+        if snapshot['id'] == int(snapshot_id):
+            resp = make_response(json.dumps(snapshot), 200)
+            return resp
+
+    throw_error(500, 'SERVER_ERROR',
+                "The snapshot id '%s' does not exists." % snapshot_id)
 
 
 @app.route('/lhos/volumes', methods=['POST'])

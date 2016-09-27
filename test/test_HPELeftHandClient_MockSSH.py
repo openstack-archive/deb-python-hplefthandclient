@@ -210,3 +210,118 @@ class HPELeftHandClientMockSSHTestCase(test_HPELeftHandClient_base
         self.assertRaises(exceptions.SSHException,
                           ssh_client.was_command_successful,
                           cmd_out)
+
+    def test_connect_with_password(self):
+        ssh_client = ssh.HPELeftHandSSHClient(ip, user, password,
+                                              known_hosts_file=None,
+                                              missing_key_policy=paramiko.
+                                              AutoAddPolicy)
+
+        ssh_client.san_password = 'my_san_pwd'
+        ssh_client.san_ip = '0.0.0.0'
+        ssh_client.san_ssh_port = '1234'
+        ssh_client.san_login = 'my_login'
+        ssh_client.ssh_conn_timeout = '100'
+
+        ssh_client.ssh.connect = mock.Mock()
+        ssh_client._connect(ssh_client.ssh)
+        ssh_client.ssh.connect.assert_called_with('0.0.0.0',
+                                                  port='1234',
+                                                  username='my_login',
+                                                  password='my_san_pwd',
+                                                  timeout='100')
+
+    def test_connect_with_private_key(self):
+        ssh_client = ssh.HPELeftHandSSHClient(ip, user, password,
+                                              known_hosts_file=None,
+                                              missing_key_policy=paramiko.
+                                              AutoAddPolicy)
+        mock_expand_user = mock.Mock()
+        mock_expand_user.return_value = 'my_user'
+
+        mock_from_private_key_file = mock.Mock()
+        mock_from_private_key_file.return_value = 'my_private_key'
+
+        ssh_client.san_password = None
+        ssh_client.san_privatekey = 'my_san_key'
+        ssh_client.san_ip = '0.0.0.0'
+        ssh_client.san_ssh_port = '1234'
+        ssh_client.san_login = 'my_login'
+        ssh_client.ssh_conn_timeout = '100'
+
+        ssh_client.ssh.connect = mock.Mock()
+
+        with mock.patch('os.path.expanduser',
+                        mock_expand_user, create=True):
+            with mock.patch('paramiko.RSAKey.from_private_key_file',
+                            mock_from_private_key_file, create=True):
+                ssh_client._connect(ssh_client.ssh)
+
+        mock_expand_user.assert_called_with('my_san_key')
+        mock_from_private_key_file.assert_called_with('my_user')
+        ssh_client.ssh.connect.assert_called_with('0.0.0.0',
+                                                  port='1234',
+                                                  username='my_login',
+                                                  pkey='my_private_key',
+                                                  timeout='100')
+
+    def test_connect_without_password_and_private_key(self):
+        ssh_client = ssh.HPELeftHandSSHClient(ip, user, password,
+                                              known_hosts_file=None,
+                                              missing_key_policy=paramiko.
+                                              AutoAddPolicy)
+        mock_expand_user = mock.Mock()
+        mock_expand_user.return_value = 'my_user'
+
+        mock_from_private_key_file = mock.Mock()
+        mock_from_private_key_file.return_value = 'my_private_key'
+
+        ssh_client.san_password = None
+        ssh_client.san_privatekey = None
+
+        ssh_client.ssh = mock.Mock()
+        ssh_client.ssh.get_transport.return_value = False
+        self.assertRaises(paramiko.SSHException, ssh_client.open)
+
+    def test_run_ssh_with_exception(self):
+        ssh_client = ssh.HPELeftHandSSHClient(ip, user, password,
+                                              known_hosts_file=None,
+                                              missing_key_policy=paramiko.
+                                              AutoAddPolicy)
+
+        ssh_client.check_ssh_injection = mock.Mock()
+        ssh_client.check_ssh_injection.return_value = True
+        ssh_client._ssh_execute = mock.Mock()
+        ssh_client._ssh_execute.side_effect = Exception('End this here')
+        ssh_client._create_ssh = mock.Mock()
+        ssh_client._create_ssh.return_value = True
+        ssh_client.ssh = mock.Mock()
+        ssh_client.ssh.get_transport.is_alive.return_value = True
+
+        command = ['fake']
+        self.assertRaises(exceptions.SSHException, ssh_client._run_ssh,
+                          command, attempts=1)
+        ssh_client.check_ssh_injection.assert_called_once()
+        ssh_client._ssh_execute.assert_called_once()
+        ssh_client._create_ssh.assert_not_called()
+
+    def test_run_ssh_exceeds_attempts(self):
+        ssh_client = ssh.HPELeftHandSSHClient(ip, user, password,
+                                              known_hosts_file=None,
+                                              missing_key_policy=paramiko.
+                                              AutoAddPolicy)
+
+        ssh_client.check_ssh_injection = mock.Mock()
+        ssh_client.check_ssh_injection.return_value = True
+        ssh_client._ssh_execute = mock.Mock()
+        ssh_client._ssh_execute.side_effect = Exception('End this here')
+        ssh_client._create_ssh = mock.Mock()
+        ssh_client._create_ssh.return_value = True
+        ssh_client.ssh = mock.Mock()
+        ssh_client.ssh.get_transport.side_effect = Exception('End here')
+
+        command = ['fake']
+        self.assertRaises(Exception, ssh_client._run_ssh, command, attempts=1)
+        ssh_client.check_ssh_injection.assert_called_once()
+        ssh_client._ssh_execute.assert_called_once()
+        ssh_client._create_ssh.assert_not_called()

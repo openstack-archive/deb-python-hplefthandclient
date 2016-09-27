@@ -25,6 +25,7 @@ from hpelefthandclient import exceptions
 VOLUME_NAME1 = 'VOLUME1_UNIT_TEST_' + test_HPELeftHandClient_base.TIME
 VOLUME_NAME2 = 'VOLUME2_UNIT_TEST_' + test_HPELeftHandClient_base.TIME
 VOLUME_NAME3 = 'VOLUME3_UNIT_TEST_' + test_HPELeftHandClient_base.TIME
+CLONE_NAME1 = 'CLONE_UNIT_TEST_' + test_HPELeftHandClient_base.TIME
 SNAP_NAME1 = 'SNAP_UNIT_TEST1_' + test_HPELeftHandClient_base.TIME
 SNAP_NAME2 = 'SNAP_UNIT_TEST2_' + test_HPELeftHandClient_base.TIME
 SKIP_FLASK_RCOPY_MESSAGE = ("Remote copy is not configured to be tested "
@@ -111,6 +112,11 @@ class HPELeftHandClientVolumeTestCase(test_HPELeftHandClient_base.
             pass
         try:
             volume_info = self.cl.getVolumeByName(VOLUME_NAME3)
+            self.cl.deleteVolume(volume_info['id'])
+        except Exception:
+            pass
+        try:
+            volume_info = self.cl.getVolumeByName(CLONE_NAME1)
             self.cl.deleteVolume(volume_info['id'])
         except Exception:
             pass
@@ -266,6 +272,20 @@ class HPELeftHandClientVolumeTestCase(test_HPELeftHandClient_base.
 
         self.printFooter('get_volumes')
 
+    def test_2_get_volume_by_id(self):
+        self.printHeader('get_volumes')
+
+        self.cl.createVolume(VOLUME_NAME1, self.cluster_id,
+                             self.GB_TO_BYTES)
+        self.cl.createVolume(VOLUME_NAME2, self.cluster_id,
+                             self.GB_TO_BYTES)
+
+        vols = self.cl.getVolumes()
+        vol_info = self.cl.getVolume(vols['members'][0]['id'])
+        self.assertEqual(vols['members'][0]['id'], vol_info['id'])
+
+        self.printFooter('get_volumes')
+
     def test_2_get_volumes_query(self):
         self.printHeader('get_volumes')
 
@@ -286,6 +306,37 @@ class HPELeftHandClientVolumeTestCase(test_HPELeftHandClient_base.
             fields=None)
 
         self.printFooter('get_volumes')
+
+    def test_2_modify_volume(self):
+        self.printHeader('modify_volume')
+
+        self.cl.createVolume(VOLUME_NAME1, self.cluster_id,
+                             self.GB_TO_BYTES)
+        volume_info = self.cl.getVolumeByName(VOLUME_NAME1)
+
+        new_options = {'description': 'test volume'}
+        self.cl.modifyVolume(volume_info['id'], new_options)
+        new_volume_info = self.cl.getVolumeByName(VOLUME_NAME1)
+        self.assertIn('description', new_volume_info)
+        self.assertEqual(new_options['description'],
+                         new_volume_info['description'])
+
+        self.printFooter('modify_volume')
+
+    @unittest.skipIf(not is_live_test(), "Only runs on live array.")
+    def test_2_clone_volume(self):
+        self.printHeader('clone_volume')
+
+        self.cl.createVolume(VOLUME_NAME1, self.cluster_id,
+                             self.GB_TO_BYTES)
+        volume_info = self.cl.getVolumeByName(VOLUME_NAME1)
+        self.cl.cloneVolume(CLONE_NAME1, volume_info['id'])
+
+        clone_volume_info = self.cl.getVolumeByName(CLONE_NAME1)
+        self.assertEqual(CLONE_NAME1,
+                         clone_volume_info['name'])
+
+        self.printFooter('clone_volume')
 
     def test_3_delete_volume_nonExist(self):
         self.printHeader('delete_volume_nonExist')
@@ -520,6 +571,21 @@ class HPELeftHandClientVolumeTestCase(test_HPELeftHandClient_base.
                           "fake_snap")
 
         self.printFooter('get_snapshot_parent_volume_snapshot_invalid')
+
+    def test_6_get_snapshot_by_id(self):
+        self.printHeader('get_snapshot_by_id')
+
+        self.cl.createVolume(VOLUME_NAME1, self.cluster_id,
+                             self.GB_TO_BYTES)
+        volume_info = self.cl.getVolumeByName(VOLUME_NAME1)
+        option = {'inheritAccess': True}
+        self.cl.createSnapshot(SNAP_NAME1, volume_info['id'], option)
+
+        snaps = self.cl.getSnapshots()
+        snapshot_info = self.cl.getSnapshot(snaps['members'][0]['id'])
+        self.assertEqual(snaps['members'][0]['id'], snapshot_info['id'])
+
+        self.printFooter('get_snapshot_by_id')
 
     def test_7_get_ip_from_cluster(self):
         self.printHeader('get_ip_from_cluster')
